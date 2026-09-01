@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/6.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.1/ref/settings/
 """
+#asdfghjkl
 
 from pathlib import Path
 import os
@@ -16,7 +17,7 @@ from dotenv import load_dotenv
 # Load environment variables from .env file
 load_dotenv()
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "rafael-arlen-myportfolio.pws.cs.ui.ac.id"]
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'rafael-arlen-myportfolio.pws.cs.ui.ac.id']
 
 PRODUCTION = os.getenv('PRODUCTION', 'False').lower() == 'true'
 

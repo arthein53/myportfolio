@@ -3,6 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        // js untuk cek light/dark theme preferensi browser
+        (() => {
+            const systemTheme = window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";  
+            try {
+                document.documentElement.dataset.theme = localStorage.getItem("portfolio-theme") || systemTheme;
+            } catch {
+                document.documentElement.dataset.theme = systemTheme;
+            }
+        })();
+    </script>
     <title>Arlen - Portfolio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,8 +24,12 @@
     <header class="site-header">
         <div class="container">
             <a href="#profile" class="brand">Arlen</a>
-            <nav>
+            <nav aria-label="Primary navigation"> 
                 <a href="#profile">Profile</a>
+                <button class="theme-toggle" type="button" aria-label="Switch color theme" aria-pressed="false">    <!-- tombol toggle light/dark theme, penerapan aria direkomendasikan AI -->
+                    <span class="theme-toggle-mark" aria-hidden="true"></span>
+                    <span class="theme-toggle-label">Light</span>
+                </button>
             </nav>
         </div>
     </header>
@@ -50,6 +65,84 @@
                 </div>
             </div>
         </section>
+
+        <!-- MY SKILLS SECTION -->
+        <section class="skills-section" id="skills" aria-labelledby="skills-title">
+            <div class="container">
+                <p class="section-kicker">Tools, instruments, and working languages</p>
+                <h2 id="skills-title">My Passion</h2>
+            </div>
+
+            <div class="skills-rows">
+                <div class="skills-row" aria-label="Technology tools">
+                    <div class="skills-window" tabindex="0" aria-label="Technology tools">
+                        <div class="skills-track skills-track-tech">
+                            <ul class="skills-set">
+                                <li class="skills-card"><img src="/static/img/skill-icons/vs-code-transparent.png" alt="" loading="lazy" decoding="async"><span>VS Code</span></li>
+                                <li class="skills-card"><img src="/static/img/skill-icons/git.svg" alt="" loading="lazy" decoding="async"><span>Git</span></li>
+                                <li class="skills-card"><img src="/static/img/skill-icons/python.webp" alt="" loading="lazy" decoding="async"><span>Python</span></li>
+                                <li class="skills-card"><img src="/static/img/skill-icons/pytorch.svg" alt="" loading="lazy" decoding="async"><span>PyTorch</span></li>
+                                <li class="skills-card"><img src="/static/img/skill-icons/java-transparent.webp" alt="" loading="lazy" decoding="async"><span>Java</span></li>
+                                <li class="skills-card"><img src="/static/img/skill-icons/html5.png" alt="" loading="lazy" decoding="async"><span>HTML5</span></li>
+                                <li class="skills-card"><img src="/static/img/skill-icons/css3.png" alt="" loading="lazy" decoding="async"><span>CSS3</span></li>
+                                <li class="skills-card"><img src="/static/img/skill-icons/javascript.webp" alt="" loading="lazy" decoding="async"><span>JavaScript</span></li>
+                                <li class="skills-card"><img src="/static/img/skill-icons/cpp.webp" alt="" loading="lazy" decoding="async"><span>C++</span></li>
+                                <li class="skills-card"><img src="/static/img/skill-icons/c.png" alt="" loading="lazy" decoding="async"><span>C</span></li>
+                                <li class="skills-card"><span class="github-icon" aria-hidden="true"><img class="github-icon-light" src="/static/img/skill-icons/github.svg" alt="" loading="lazy" decoding="async"><img class="github-icon-dark" src="/static/img/skill-icons/github-white.webp" alt="" loading="lazy" decoding="async"></span><span>GitHub</span></li>
+                                <li class="skills-card"><img src="/static/img/skill-icons/google-colab.webp" alt="" loading="lazy" decoding="async"><span>Google Colab</span></li>
+                                <li class="skills-card"><img src="/static/img/skill-icons/figma.png" alt="" loading="lazy" decoding="async"><span>Figma</span></li>
+                                <li class="skills-card"><img src="/static/img/skill-icons/overleaf.svg" alt="" loading="lazy" decoding="async"><span>Overleaf</span></li>
+                            </ul>
+                            <ul class="skills-set" aria-hidden="true"> <!-- semua skill diduplikasi agar transisi saat selesai loop lebih smooth, ide teknik diberikan AI -->
+                                <li class="skills-card"><img src="/static/img/skill-icons/vs-code-transparent.png" alt="" loading="lazy" decoding="async"><span>VS Code</span></li>
+                                <li class="skills-card"><img src="/static/img/skill-icons/git.svg" alt="" loading="lazy" decoding="async"><span>Git</span></li>
+                                <li class="skills-card"><img src="/static/img/skill-icons/python.webp" alt="" loading="lazy" decoding="async"><span>Python</span></li>
+                                <li class="skills-card"><img src="/static/img/skill-icons/pytorch.svg" alt="" loading="lazy" decoding="async"><span>PyTorch</span></li>
+                                <li class="skills-card"><img src="/static/img/skill-icons/java-transparent.webp" alt="" loading="lazy" decoding="async"><span>Java</span></li>
+                                <li class="skills-card"><img src="/static/img/skill-icons/html5.png" alt="" loading="lazy" decoding="async"><span>HTML5</span></li>
+                                <li class="skills-card"><img src="/static/img/skill-icons/css3.png" alt="" loading="lazy" decoding="async"><span>CSS3</span></li>
+                                <li class="skills-card"><img src="/static/img/skill-icons/javascript.webp" alt="" loading="lazy" decoding="async"><span>JavaScript</span></li>
+                                <li class="skills-card"><img src="/static/img/skill-icons/cpp.webp" alt="" loading="lazy" decoding="async"><span>C++</span></li>
+                                <li class="skills-card"><img src="/static/img/skill-icons/c.png" alt="" loading="lazy" decoding="async"><span>C</span></li>
+                                <li class="skills-card"><span class="github-icon" aria-hidden="true"><img class="github-icon-light" src="/static/img/skill-icons/github.svg" alt="" loading="lazy" decoding="async"><img class="github-icon-dark" src="/static/img/skill-icons/github-white.webp" alt="" loading="lazy" decoding="async"></span><span>GitHub</span></li>
+                                <li class="skills-card"><img src="/static/img/skill-icons/google-colab.webp" alt="" loading="lazy" decoding="async"><span>Google Colab</span></li>
+                                <li class="skills-card"><img src="/static/img/skill-icons/figma.png" alt="" loading="lazy" decoding="async"><span>Figma</span></li>
+                                <li class="skills-card"><img src="/static/img/skill-icons/overleaf.svg" alt="" loading="lazy" decoding="async"><span>Overleaf</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="skills-row" aria-label="Music tools and instruments">
+                    <div class="skills-window" tabindex="0" aria-label="Music tools and instruments">
+                        <div class="skills-track skills-track-music">
+                            <ul class="skills-set">
+                                <li class="skills-card"><img src="/static/img/skill-icons/cubase-transparent.webp" alt="" loading="lazy" decoding="async"><span>Cubase</span></li>
+                                <li class="skills-card"><img src="/static/img/skill-icons/fl-studio-transparent.webp" alt="" loading="lazy" decoding="async"><span>FL Studio</span></li>
+                                <li class="skills-card"><img src="/static/img/skill-icons/studio-one-transparent.webp" alt="" loading="lazy" decoding="async"><span>Studio One</span></li>
+                                <li class="skills-card"><img src="/static/img/skill-icons/musescore.svg" alt="" loading="lazy" decoding="async"><span>MuseScore</span></li>
+                                <li class="skills-card"><img src="/static/img/skill-icons/sibelius.jpg" alt="" loading="lazy" decoding="async"><span>Sibelius</span></li>
+                                <li class="skills-card"><img src="/static/img/skill-icons/piano-transparent.webp" alt="" loading="lazy" decoding="async"><span>Keys</span></li>
+                                <li class="skills-card"><img src="/static/img/skill-icons/trombone-transparent.webp" alt="" loading="lazy" decoding="async"><span>Trombone</span></li>
+                                <li class="skills-card"><img src="/static/img/skill-icons/drums.png" alt="" loading="lazy" decoding="async"><span>Drums</span></li>
+                                <li class="skills-card"><img src="/static/img/skill-icons/bass-transparent.webp" alt="" loading="lazy" decoding="async"><span>Bass</span></li>
+                            </ul>
+                            <ul class="skills-set" aria-hidden="true">
+                                <li class="skills-card"><img src="/static/img/skill-icons/cubase-transparent.webp" alt="" loading="lazy" decoding="async"><span>Cubase</span></li>
+                                <li class="skills-card"><img src="/static/img/skill-icons/fl-studio-transparent.webp" alt="" loading="lazy" decoding="async"><span>FL Studio</span></li>
+                                <li class="skills-card"><img src="/static/img/skill-icons/studio-one-transparent.webp" alt="" loading="lazy" decoding="async"><span>Studio One</span></li>
+                                <li class="skills-card"><img src="/static/img/skill-icons/musescore.svg" alt="" loading="lazy" decoding="async"><span>MuseScore</span></li>
+                                <li class="skills-card"><img src="/static/img/skill-icons/sibelius.jpg" alt="" loading="lazy" decoding="async"><span>Sibelius</span></li>
+                                <li class="skills-card"><img src="/static/img/skill-icons/piano-transparent.webp" alt="" loading="lazy" decoding="async"><span>Keys</span></li>
+                                <li class="skills-card"><img src="/static/img/skill-icons/trombone-transparent.webp" alt="" loading="lazy" decoding="async"><span>Trombone</span></li>
+                                <li class="skills-card"><img src="/static/img/skill-icons/drums.png" alt="" loading="lazy" decoding="async"><span>Drums</span></li>
+                                <li class="skills-card"><img src="/static/img/skill-icons/bass-transparent.webp" alt="" loading="lazy" decoding="async"><span>Bass</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
     <footer class="site-footer">
@@ -57,5 +150,47 @@
             <p>&copy; 2026 Arlen. Fakultas Ilmu Komputer, Universitas Indonesia.</p>
         </div>
     </footer>
+    <script>    // logika dan syntax js dibantu (diajari) oleh AI
+        (() => {
+            const root = document.documentElement;
+            const toggle = document.querySelector(".theme-toggle");
+            const label = toggle.querySelector(".theme-toggle-label");
+            const systemPreference = window.matchMedia("(prefers-color-scheme: light)");
+
+            const savedTheme = () => {
+                try {
+                    return localStorage.getItem("portfolio-theme");
+                } catch {
+                    return null;
+                }
+            };
+
+            const applyTheme = (theme, persist = false) => {
+                root.dataset.theme = theme;
+                const nextTheme = theme === "dark" ? "light" : "dark";
+                toggle.setAttribute("aria-pressed", String(theme === "light"));
+                toggle.setAttribute("aria-label", `Switch to ${nextTheme} mode`);
+                label.textContent = nextTheme === "light" ? "Light" : "Dark";   // kalau light theme, label jadi "Dark" dan sebaliknya
+
+                if (persist) {
+                    try {
+                        localStorage.setItem("portfolio-theme", theme);
+                    } catch {
+                        // theme akan tetap teraplikasi meski storage unavailable
+                    }
+                }
+            };
+
+            applyTheme(root.dataset.theme || "dark");
+            toggle.addEventListener("click", () => {    // yang dieksekusi kalau button diklik
+                applyTheme(root.dataset.theme === "dark" ? "light" : "dark", true);
+            });
+            systemPreference.addEventListener("change", (event) => {    // yang dieksekusi kalau setting sistem/browser diubah kalau user belum pilih theme
+                if (!savedTheme()) {
+                    applyTheme(event.matches ? "light" : "dark");
+                }
+            });
+        })();
+    </script>
 </body>
 </html>
