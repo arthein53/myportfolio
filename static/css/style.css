@@ -278,6 +278,169 @@ h1 {
     box-shadow: none;
 }
 
+/* Skills Loop */
+.skills-section {
+    --skills-gap: 1rem;
+    --skills-card-width: clamp(10rem, calc((100vw - 8rem) / 6), 13rem);
+    padding: 1rem 0 7rem;
+    overflow: hidden;
+}
+
+.section-kicker {
+    margin-bottom: 0.75rem;
+    color: var(--text-muted);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+
+.skills-section h2 {
+    max-width: none;
+    color: var(--ink);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(3rem, 6vw, 5rem);
+    font-weight: 400;
+    letter-spacing: -0.045em;
+    line-height: 0.92;
+}
+
+.skills-rows {
+    margin-top: 2.5rem;
+    padding: 1rem 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+}
+
+.skills-row + .skills-row {
+    margin-top: 1rem;
+}
+
+.skills-window {
+    overflow: hidden;
+    padding: 0.25rem 0;
+}
+
+.skills-window:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: -2px;
+}
+
+.skills-track {
+    display: flex;
+    width: max-content;
+    will-change: transform;
+}
+
+.skills-track-tech {
+    animation: skills-scroll-left 115s linear infinite;
+}
+
+.skills-track-music {
+    animation: skills-scroll-right 125s linear infinite;
+}
+
+.skills-window:hover .skills-track,
+.skills-window:focus .skills-track,
+.skills-window:focus-within .skills-track {
+    animation-play-state: paused;
+}
+
+.skills-set {
+    display: flex;
+    flex: 0 0 auto;
+    gap: var(--skills-gap);
+    margin: 0;
+    padding: 0 calc(var(--skills-gap) / 2);
+    list-style: none;
+}
+
+.skills-card {
+    display: grid;
+    width: var(--skills-card-width);
+    aspect-ratio: 1.35;
+    flex: 0 0 auto;
+    align-content: center;
+    justify-items: center;
+    gap: 0.8rem;
+    border: 1px solid var(--line);
+    background-color: var(--surface);
+    color: var(--ink);
+    font-size: 0.76rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: background-color 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+
+.skills-card:hover {
+    border-color: var(--accent);
+    background-color: var(--surface-raised);
+    transform: translateY(-0.25rem);
+}
+
+.skills-card img {
+    --icon-scale: 1;
+    display: block;
+    width: 3.5rem;
+    height: 3.5rem;
+    object-fit: contain;
+    transform: scale(var(--icon-scale));
+    transition: transform 180ms ease;
+}
+
+.skills-card img[src$="css3.png"] { /* menyesuaikan ukuran agar sama dengan icon html5 karena sourcenya berbeda ukuran */
+    --icon-scale: 1.26;
+}
+
+.github-icon {  /* icon github memiliki konfigurasi khusus agar bisa menyesuaikan light/dark theme */
+    position: relative;
+    display: block;
+    width: 3.5rem;
+    height: 3.5rem;
+}
+
+.github-icon img {
+    position: absolute;
+    inset: 0;
+}
+
+.github-icon-light {
+    display: none !important;
+}
+
+.github-icon-dark {
+    --icon-scale: 1.01;
+}
+
+:root[data-theme="light"] .github-icon-light {
+    display: block !important;
+}
+
+:root[data-theme="light"] .github-icon-dark {
+    display: none !important;
+}
+
+.skills-card:hover img {
+    transform: scale(calc(var(--icon-scale) * 1.06));
+}
+
+@keyframes skills-scroll-left {
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+@keyframes skills-scroll-right {
+    from {
+        transform: translateX(-50%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}
+
 /* Footer & Responsive */
 .site-footer {
     padding: 2rem 1.5rem;
@@ -321,5 +484,15 @@ button:focus-visible {
 
     .social-links {
         justify-content: flex-start;
+    }
+
+    .skills-section {
+        --skills-gap: 0.75rem;
+        --skills-card-width: 9rem;
+        padding-bottom: 5rem;
+    }
+
+    .skills-section h2 {
+        font-size: clamp(2.75rem, 14vw, 4rem);
     }
 }
