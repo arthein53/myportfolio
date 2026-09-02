@@ -68,6 +68,9 @@ h1 {
 
 /* Header dengan Flexbox */
 .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
     border-bottom: 1px solid var(--line);
     background-color: var(--paper);
     transition: background-color 180ms ease, border-color 180ms ease;
@@ -157,6 +160,7 @@ h1 {
 
 /* Section Hero dengan CSS Grid */
 .hero {
+    scroll-margin-top: 6rem;
     padding: 6rem 0 7rem;
 }
 
