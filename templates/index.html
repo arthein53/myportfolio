@@ -17,15 +17,21 @@
     <title>Arlen - Portfolio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
     <header class="site-header">
         <div class="container">
             <a href="#profile" class="brand">Arlen</a>
-            <nav aria-label="Primary navigation"> 
+            <button class="menu-toggle" type="button" aria-label="Open navigation" aria-controls="primary-nav" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+            <nav id="primary-nav" aria-label="Primary navigation">
                 <a href="#profile">Profile</a>
+                <a href="#skills">Skills</a>
+                <a href="#projects">Projects</a>
+                <a href="#discography">Discography</a>
                 <button class="theme-toggle" type="button" aria-label="Switch color theme" aria-pressed="false">    <!-- tombol toggle light/dark theme, penerapan aria direkomendasikan AI -->
                     <span class="theme-toggle-mark" aria-hidden="true"></span>
                     <span class="theme-toggle-label">Light</span>
@@ -39,13 +45,14 @@
             <div class="container hero-grid">
                 <div class="hero-identity">
                     <p class="hero-kicker">Computer Science &middot; Universitas Indonesia</p>
-                    <h1>Rafael Arlen Wijanarko</h1>
+                    <h1>Rafael <span>Arlen</span> Wijanarko</h1>
                 </div>
-                <div class="hero-photo">
-                    <div class="photo-block"></div>
+                <figure class="hero-photo">
                     <img class="avatar" src="/static/img/Professional Photo.png" alt="Photo of Arlen">
-                </div>
+                    <figcaption>Computer, music &amp; everything between.</figcaption>
+                </figure>
                 <div class="hero-details">
+                    <p class="hero-statement">Training models. Dropping tracks.</p>
                     <p class="bio">I work across data, AI/ML, and music-making, interested in how technical systems and creative practice can make each other more meaningful.</p>
                     <dl class="meta-list">
                         <div class="meta-row">
@@ -58,19 +65,19 @@
                         </div>
                     </dl>
                     <div class="social-links">
-                        <a href="https://github.com/arthein53/" class="social-link">GitHub</a>
-                        <a href="https://www.linkedin.com/in/rafael-arlen-wijanarko-84ba83218/" class="social-link">LinkedIn</a>
-                        <a href="mailto:arlenwijanarko250307@gmail.com" class="social-link">Email</a>
+                        <a href="https://github.com/arthein53/" class="social-link" aria-label="GitHub" title="GitHub"><span class="github-icon" aria-hidden="true"><img class="github-icon-light" src="/static/img/social-icons/github.svg" alt=""><img class="github-icon-dark" src="/static/img/social-icons/github-white.webp" alt=""></span></a>
+                        <a href="https://www.linkedin.com/in/rafael-arlen-wijanarko-84ba83218/" class="social-link" aria-label="LinkedIn" title="LinkedIn"><img src="/static/img/social-icons/linkedin.png" alt=""></a>
+                        <a href="mailto:arlenwijanarko250307@gmail.com" class="social-link" aria-label="Email" title="Email"><img src="/static/img/social-icons/gmail.png" alt=""></a>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- MY SKILLS SECTION -->
-        <section class="skills-section" id="skills" aria-labelledby="skills-title">
+        <section class="section skills-section" id="skills" aria-labelledby="skills-title">
             <div class="container">
-                <p class="section-kicker">Tools, instruments, and working languages</p>
-                <h2 id="skills-title">My Passion</h2>
+                <p class="section-kicker">Tools, instruments, and tech stacks</p>
+                <h2 class="section-title" id="skills-title">My Passion</h2>
             </div>
 
             <div class="skills-rows">
@@ -143,6 +150,207 @@
                 </div>
             </div>
         </section>
+
+        <section class="section projects-section" id="projects">
+            <div class="container">
+                <p class="section-kicker">Years of dedication, collaboration focused</p>
+                <h2 class="section-title">My Projects</h2>
+            </div>
+            <div class="container">
+                <ol class="projects-list">
+                    <li>
+                        <article class="project">
+                            <p class="project-number" aria-hidden="true">01</p>
+                            <div class="project-content">
+                                <h3>Multimodal Rice Land-Suitability Research</h3>
+                                <p>Co-authored a low-resource system that prioritizes rice-land suitability for field verification in Kapuas Regency. It combines Sentinel-2 ResNet-18 embeddings with soil, climate, topographic, and hydrological features through late fusion.</p>
+                                <ul class="project-tags" aria-label="Technologies used">
+                                    <li>PyTorch</li>
+                                    <li>ResNet-18</li>
+                                    <li>Spatial CV</li>
+                                    <li>SHAP</li>
+                                    <li>Grad-CAM</li>
+                                </ul>
+                            </div>
+                            <div class="project-meta">
+                                <p>2026 - Ongoing</p>
+                                <p>GEMASTIK Data Mining</p>
+                                <a href="https://drive.google.com/file/d/1FhNL9Kn0hoJR_7mxKKwo-KKJo4QNccVH/view?usp=sharing" target="_blank" rel="noopener noreferrer">Research summary ↗</a>
+                            </div>
+                        </article>
+                    </li>
+
+                    <li>
+                        <article class="project">
+                            <p class="project-number" aria-hidden="true">02</p>
+                            <div class="project-content">
+                                <h3>Music Instrument Recognition</h3>
+                                <p>Created and hosted a Kaggle competition for recognizing 21 instruments in polyphonic audio. Designed the annotations, train/test structure, multi-label submission format, and Macro F1 evaluation for class-imbalanced classification.</p>
+                                <ul class="project-tags" aria-label="Project topics">
+                                    <li>Music Information Retrieval</li>
+                                    <li>Audio ML</li>
+                                    <li>Multi-label Classification</li>
+                                </ul>
+                            </div>
+                            <div class="project-meta">
+                                <p>Jul - Aug 2026</p>
+                                <p>DATATHON 2026</p>
+                                <a href="https://www.kaggle.com/competitions/datathon-2026-hs-track-task-2-music-instrument-recognition-copy/overview" target="_blank" rel="noopener noreferrer">View competition ↗</a>
+                            </div>
+                        </article>
+                    </li>
+
+                    <li>
+                        <article class="project">
+                            <p class="project-number" aria-hidden="true">03</p>
+                            <div class="project-content">
+                                <h3>Indonesian LLM Knowledge Probe</h3>
+                                <p>Built a reproducible factual question-answering evaluation using 200 TyDi QA Indonesian questions, cached model outputs, and Indonesian versus English prompt conditions. Manual review showed where literal matching understates open-ended answer quality.</p>
+                                <ul class="project-tags" aria-label="Technologies and methods used">
+                                    <li>LLM Evaluation</li>
+                                    <li>TyDi QA</li>
+                                    <li>Prompt Evaluation</li>
+                                </ul>
+                            </div>
+                            <div class="project-meta">
+                                <p> May 2026</p>
+                                <p>RISTEK Data Science &amp; AI</p>
+                                <a href="https://drive.google.com/file/d/1EKjFC9hsgHV94bj8JfNmjmGkb3v4EWJ_/view?usp=sharing" target="_blank" rel="noopener noreferrer">Research summary ↗</a>
+                            </div>
+                        </article>
+                    </li>
+
+                    <li>
+                        <article class="project">
+                            <p class="project-number" aria-hidden="true">04</p>
+                            <div class="project-content">
+                                <h3>Personal Portfolio Website</h3>
+                                <p>A responsive Django portfolio presenting my work across data, AI/ML, and music.</p>
+                                <ul class="project-tags" aria-label="Technologies used">
+                                    <li>Django</li>
+                                    <li>HTML</li>
+                                    <li>CSS</li>
+                                    <li>Accessibility</li>
+                                </ul>
+                            </div>
+                            <div class="project-meta">
+                                <p>2026</p>
+                                <p>CSGE602022</p>
+                                <a href="https://rafael-arlen-myportfolio.pws.cs.ui.ac.id/" target="_blank" rel="noopener noreferrer">Open site ↗</a>
+                            </div>
+                        </article>
+                    </li>
+                </ol>
+            </div>
+        </section>
+
+        <section class="section discography-section" id="discography">
+            <div class="container">
+                <p class="section-kicker">Code was not enough, apparently.</p>
+                <h2 class="section-title">My Discography</h2>
+            </div>
+            <div class="container">
+                <ol class="discography-list">
+                    <li>
+                        <article class="discography-item" data-audio-src="/audio/HARMONI_NUSANTARA_-_Rafael_Arlen_Wijanarko_-_Juara_3_FLS2N_Cipta_Lagu_SMA_2024_Tingkat_Provinsi_DIY.mp3" tabindex="0">
+                            <div class="discography-meta">
+                                <p>Original song</p><p>FLS2N 2024</p>
+                                <a href="https://www.youtube.com/watch?v=FDkH-TcKMQY" target="_blank" rel="noopener noreferrer">Official lyric video ↗</a>
+                                <a href="https://youtu.be/DmBs803btvY?si=fzTamd_65uqZ0hmS" target="_blank" rel="noopener noreferrer">Performance video ↗</a>
+                            </div>
+                            <div class="discography-content">
+                                <h3>Harmoni Nusantara</h3>
+                                <p>A musical work that won FLS2N provincial third-place result, with vocals by Rahmadini Vania Hasna A., band by Padzband 80, and orchestra by Padzchestra.</p>
+                                <ul class="project-tags" aria-label="Music roles"><li>Writer</li><li>Arranger</li><li>Producer</li></ul>
+                            </div>
+                            <p class="discography-number" aria-hidden="true">01</p>
+                        </article>
+                    </li>
+                    <li>
+                        <article class="discography-item" data-audio-src="/audio/Merangkai_Sejarah_Padmanaba_80_Official_Lyric_Video.mp3" tabindex="0">
+                            <div class="discography-meta">
+                                <p>Original song</p><p>Padmanaba 80</p>
+                                <a href="https://open.spotify.com/track/5HYmNTfOePMdNdk43c0nN5?si=0352d83e941448f2" target="_blank" rel="noopener noreferrer">Open on Spotify ↗</a>
+                            </div>
+                            <div class="discography-content">
+                                <h3>Merangkai Sejarah</h3>
+                                <p>An original song written by me and my friend, Feodora Elysia, for Padmanaba 80.</p>
+                                <ul class="project-tags" aria-label="Music details"><li>Writer</li><li>Arranger</li><li>Producer</li></ul>
+                            </div>
+                            <p class="discography-number" aria-hidden="true">02</p>
+                        </article>
+                    </li>
+                    <li>
+                        <article class="discography-item" data-audio-src="/audio/Mekar_Anthem_Massa_Padmanaba_Official_Lyric_Video.mp3" tabindex="0">
+                            <div class="discography-meta">
+                                <p>Original song</p><p>Massa Padmanaba</p>
+                                <a href="https://www.youtube.com/watch?v=WBfnHn-40io" target="_blank" rel="noopener noreferrer">Official lyric video ↗</a>
+                            </div>
+                            <div class="discography-content">
+                                <h3>Mekar</h3>
+                                <p>An original song/anthem written by me for Massa Padmanaba.</p>
+                                <ul class="project-tags" aria-label="Music roles"><li>Writer</li><li>Arranger</li><li>Producer</li></ul></div>
+                            <p class="discography-number" aria-hidden="true">03</p>
+                        </article>
+                    </li>
+                    <li>
+                        <article class="discography-item" data-audio-src="/audio/Breaking_Horizon_Original_CompositionFull_Orchestration.mp3" tabindex="0">
+                            <div class="discography-meta">
+                                <p>Original song</p><p>Personal Project</p>
+                                <a href="https://www.youtube.com/watch?v=aIk8HbBF9ys" target="_blank" rel="noopener noreferrer">Score playback ↗</a>
+                            </div>
+                            <div class="discography-content">
+                                <h3>Breaking Horizon</h3>
+                                <p>An original orchestral composition about freedom that feels so close yet so far.</p>
+                                <ul class="project-tags" aria-label="Music tools"><li>Writer</li><li>Composer</li></ul></div>
+                            <p class="discography-number" aria-hidden="true">04</p>
+                        </article>
+                    </li>
+                    <li>
+                        <article class="discography-item" data-audio-src="/audio/Anak_Jalanan_-_Theme_Song_Musikal_Jejak_Kata_Di_Lorong_Kota_Official_Audio.mp3" tabindex="0">
+                            <div class="discography-meta">
+                                <p>Original Song</p><p>SEGI Fest 2025</p>
+                                <a href="https://www.youtube.com/watch?v=24p-2l1klDY" target="_blank" rel="noopener noreferrer">Official audio ↗</a>
+                            </div>
+                            <div class="discography-content">
+                                <h3>Anak Jalanan</h3>
+                                <p>An original theme song for SEGI Fest 2025 musical: Anak Jalanan.</p>
+                                <ul class="project-tags" aria-label="Music roles"><li>Co-Arranger</li><li>Performer</li></ul>
+                            </div>
+                            <p class="discography-number" aria-hidden="true">05</p>
+                        </article>
+                    </li>
+                    <li>
+                        <article class="discography-item" data-audio-src="/audio/Beast_Theme_for_Pentas_Besar_Jubah_Macan_2024_Enervated.mp3" tabindex="0">
+                            <div class="discography-meta">
+                                <p>Theme Song</p><p>Pentas Besar Jubah Macan 2024: Enervated</p>
+                                <a href="https://www.youtube.com/watch?v=oYD3lSO5u1w" target="_blank" rel="noopener noreferrer">Score playback ↗</a>
+                            </div>
+                            <div class="discography-content">
+                                <h3>Beast</h3>
+                                <p>An original theme song for Pentas Besar Jubah Macan 2024: Enervated.</p>
+                                <ul class="project-tags" aria-label="Music tools"><li>Writer</li><li>Composer</li><li>Conductor</li></ul>
+                            </div>
+                            <p class="discography-number" aria-hidden="true">06</p>
+                        </article>
+                    </li>
+                    <li>
+                        <article class="discography-item" data-audio-src="/audio/Phantoms_Final_Closing_of_Pentas_Besar_Jubah_Macan_2023_Masquarade.mp3" tabindex="0">
+                            <div class="discography-meta">
+                                <p>Theme Song</p><p>Pentas Besar Jubah Macan 2023: Masquarade</p>
+                                <a href="https://www.youtube.com/watch?v=Otn8LEwSgqk" target="_blank" rel="noopener noreferrer">Score playback ↗</a>
+                            </div>
+                            <div class="discography-content">
+                                <h3>Phantom's Final</h3>
+                                <p>An original theme song for Pentas Besar Jubah Macan 2023: Masquarade.</p>
+                                <ul class="project-tags" aria-label="Music roles"><li>Writer</li><li>Composer</li></ul>
+                            </div>
+                            <p class="discography-number" aria-hidden="true">07</p>
+                        </article>
+                    </li>
+                </ol>
+            </div>
+        </section>
     </main>
 
     <footer class="site-footer">
@@ -154,8 +362,87 @@
         (() => {
             const root = document.documentElement;
             const toggle = document.querySelector(".theme-toggle");
+            const menuToggle = document.querySelector(".menu-toggle");
+            const primaryNav = document.querySelector("#primary-nav");
             const label = toggle.querySelector(".theme-toggle-label");
             const systemPreference = window.matchMedia("(prefers-color-scheme: light)");
+
+            const closeMenu = () => {
+                primaryNav.classList.remove("is-open");
+                menuToggle.classList.remove("is-open");
+                menuToggle.setAttribute("aria-expanded", "false");
+                menuToggle.setAttribute("aria-label", "Open navigation");
+            };
+
+            menuToggle.addEventListener("click", () => {
+                const isOpen = primaryNav.classList.toggle("is-open");
+                menuToggle.classList.toggle("is-open", isOpen);
+                menuToggle.setAttribute("aria-expanded", String(isOpen));
+                menuToggle.setAttribute("aria-label", isOpen ? "Close navigation" : "Open navigation");
+            });
+
+            primaryNav.querySelectorAll("a").forEach((link) => {
+                link.addEventListener("click", closeMenu);
+            });
+
+            document.addEventListener("keydown", (event) => {
+                if (event.key === "Escape") closeMenu();
+            });
+
+            const closePlayer = (item) => {
+                if (!item) return;
+                const audio = item.closest("li").querySelector("audio");
+                if (audio) {
+                    audio.pause();
+                    audio.currentTime = 0;
+                }
+                const player = item.closest("li").querySelector(".discography-player");
+                if (player) player.hidden = true;
+                item.classList.remove("is-player-open");
+            };
+
+            const openPlayer = (item) => {
+                const openItem = document.querySelector(".discography-item.is-player-open");
+
+                if (item.classList.contains("is-player-open")) {
+                    closePlayer(item);
+                    return;
+                }
+
+                closePlayer(openItem);
+                const listItem = item.closest("li");
+                let player = listItem.querySelector(".discography-player");
+
+                if (!player) {
+                    player = document.createElement("div");
+                    player.className = "discography-player";
+
+                    const audio = document.createElement("audio");
+                    audio.controls = true;
+                    audio.preload = "metadata";
+                    audio.src = item.dataset.audioSrc;
+
+                    player.append(audio);
+                    listItem.append(player);
+                }
+
+                player.hidden = false;
+                item.classList.add("is-player-open");
+            };
+
+            document.querySelectorAll(".discography-item").forEach((item) => {
+                item.addEventListener("click", (event) => {
+                    if (event.target.closest("a, audio")) return;
+                    openPlayer(item);
+                });
+
+                item.addEventListener("keydown", (event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        openPlayer(item);
+                    }
+                });
+            });
 
             const savedTheme = () => {
                 try {
