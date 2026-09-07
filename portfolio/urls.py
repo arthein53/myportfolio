@@ -17,9 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from portfolio.views import landing_page
+from portfolio.views import audio_file, landing_page
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('audio/<str:filename>', audio_file, name='audio_file'),
     path('', landing_page, name='landing_page'),
 ]
