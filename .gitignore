@@ -121,5 +121,8 @@ sftp-config.json
 !.vscode/extensions.json
 .history
 
+# Uncompressed audio sources (keep MP3 files only in Git)
+/static/audio/*.wav
+
 # macOS
 .DS_Store
