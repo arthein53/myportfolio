@@ -12,17 +12,16 @@
     --ink: #eef0f4;
     --paper: #101116;
     --hero-background: #211c32;
-    --accent: #a78bfa;
+    --accent: #9b7be1;
     --accent-dark: #c4b5fd;
-    --line: #484c59;
+    --line: #4d4659;
     --text-muted: #aeb4c0;
     --surface: #191b23;
     --surface-raised: #232632;
     --geometry-plane: #2a253b;
     --geometry-shadow: rgba(0, 0, 0, 0.24);
 
-
-    --focus: #a78bfa;
+    --focus: #9b7be1;
     --radius: 0.5rem;
 }
 
