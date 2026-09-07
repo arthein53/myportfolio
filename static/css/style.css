@@ -784,6 +784,42 @@ button:focus-visible {
 }
 
 @media (max-width: 600px) {
+    .site-header .container {
+        align-items: flex-start;
+        gap: 0.5rem;
+        padding-block: 0.5rem;
+    }
+
+    .brand {
+        flex: 0 0 auto;
+        padding-top: 0.4rem;
+        font-size: 0.86rem;
+    }
+
+    .site-header nav {
+        flex: 1;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 0.25rem;
+    }
+
+    .site-header nav a,
+    .theme-toggle {
+        min-height: 2.25rem;
+        padding: 0.45rem 0.55rem;
+        font-size: 0.72rem;
+    }
+
+    .theme-toggle {
+        gap: 0.35rem;
+        padding-inline: 0.6rem;
+    }
+
+    .hero,
+    .section {
+        scroll-margin-top: 8rem;
+    }
+
     .hero {
         padding: 2rem 0 3rem;
     }
