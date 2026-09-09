@@ -838,6 +838,68 @@ h1 {
     .skills-set[aria-hidden="true"] { display: none; }
 } */
 
+/* Experience */
+.experience-section {
+    min-height: calc(100vh - 10rem);
+    padding: 5rem 0 7rem;
+    border-top: 1px solid var(--line);
+    background-color: var(--paper);
+}
+
+.experience-section h1 {
+    margin: 0.4rem 0 0;
+    font-size: clamp(2.4rem, 5vw, 4rem);
+}
+
+.experience-grid {
+    margin-top: 2.5rem;
+    border-top: 1px solid var(--line);
+}
+
+.experience-card {
+    display: grid;
+    grid-template-columns: minmax(8rem, 12rem) minmax(0, 1fr) auto;
+    gap: 2rem;
+    align-items: start;
+    padding: 2rem 1.5rem;
+    border-bottom: 1px solid var(--line);
+    background-color: var(--paper);
+}
+
+.experience-card:nth-child(even) {
+    background-color: var(--hero-background);
+}
+
+.experience-category {
+    color: var(--accent-dark);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.experience-card h2 {
+    margin: 0;
+    font-size: clamp(1.25rem, 2.4vw, 1.75rem);
+}
+
+.experience-description,
+.empty-state {
+    color: var(--text-muted);
+}
+
+.experience-status {
+    color: var(--accent-dark);
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.empty-state {
+    padding: 2rem 1.5rem;
+    border-bottom: 1px solid var(--line);
+}
+
 /* Footer & Responsive */
 .site-footer {
     padding: 2rem 1.5rem;
@@ -979,5 +1041,20 @@ button:focus-visible {
 
     .section-title {
         font-size: clamp(2rem, 8vw, 2.75rem);
+    }
+
+    .experience-section {
+        min-height: calc(100vh - 8rem);
+        padding: 4rem 0 5rem;
+    }
+
+    .experience-card {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+        padding: 1.5rem 1rem;
+    }
+
+    .experience-status {
+        justify-self: end;
     }
 }

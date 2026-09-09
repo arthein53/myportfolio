@@ -121,6 +121,9 @@ sftp-config.json
 !.vscode/extensions.json
 .history
 
+# Generated static collection output
+/staticfiles/
+
 # Uncompressed audio sources (keep MP3 files only in Git)
 /static/audio/*.wav
 

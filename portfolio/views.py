@@ -4,7 +4,6 @@ from pathlib import Path
 
 from django.contrib.staticfiles import finders
 from django.http import FileResponse, Http404, StreamingHttpResponse
-from django.shortcuts import render
 
 
 _RANGE_RE = re.compile(r"bytes=(\d*)-(\d*)$")
@@ -69,7 +68,3 @@ def audio_file(request, filename):
     response["Content-Length"] = str(length)
     response["Content-Range"] = f"bytes {start}-{end}/{size}"
     return response
-
-
-def landing_page(request):
-    return render(request, "index.html")
