@@ -6,7 +6,7 @@
     <script>
         // js untuk cek light/dark theme preferensi browser
         (() => {
-            const systemTheme = window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";  
+            const systemTheme = window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
             try {
                 document.documentElement.dataset.theme = localStorage.getItem("portfolio-theme") || systemTheme;
             } catch {
