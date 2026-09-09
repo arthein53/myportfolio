@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        // js untuk cek light/dark theme preferensi browser
+        (() => {
+            const systemTheme = window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";  
+            try {
+                document.documentElement.dataset.theme = localStorage.getItem("portfolio-theme") || systemTheme;
+            } catch {
+                document.documentElement.dataset.theme = systemTheme;
+            }
+        })();
+    </script>
+    <title>Arlen - Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <a href="{% url 'main:show_main' %}" class="brand">{{ name }}</a>
+            <button class="menu-toggle" type="button" aria-label="Open navigation" aria-controls="primary-nav" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+            <nav id="primary-nav" aria-label="Primary navigation">
+                <a href="{% url 'main:show_main' %}#profile">Profile</a>
+                <a href="{% url 'main:show_main' %}#skills">Skills</a>
+                <a href="{% url 'main:show_main' %}#projects">Projects</a>
+                <a href="{% url 'main:show_main' %}#discography">Discography</a>
+                <a href="{% url 'main:show_experience' %}">Experience</a>
+                <button class="theme-toggle" type="button" aria-label="Switch color theme" aria-pressed="false">    <!-- tombol toggle light/dark theme, penerapan aria direkomendasikan AI -->
+                    <span class="theme-toggle-mark" aria-hidden="true"></span>
+                    <span class="theme-toggle-label">Light</span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="experience-section" id="experience">
+            <div class="container">
+                <p class="section-kicker">Perjalanan saya sejauh ini</p>
+                <h1>Experience</h1>
+
+                <div class="experience-grid">
+                    {% for experience in experience_list %}
+                        <article class="experience-card">
+                            <span class="experience-category">
+                                {{ experience.get_category_display }}
+                            </span>
+                            <h2>{{ experience.title }}</h2>
+                            <p class="experience-description">
+                                {{ experience.description }}
+                            </p>
+
+                            {% if experience.is_ongoing %}
+                                <p class="experience-status">Sedang berlangsung</p>
+                            {% else %}
+                                <p class="experience-status">Selesai</p>
+                            {% endif %}
+                        </article>
+                    {% empty %}
+                        <p class="empty-state">
+                            Belum ada pengalaman yang ditambahkan.
+                        </p>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2026 {{ name }}. Fakultas Ilmu Komputer, Universitas Indonesia.</p>
+        </div>
+    </footer>
+    <script>    // logika dan syntax js dibantu (diajari) oleh AI
+        (() => {
+            const root = document.documentElement;
+            const toggle = document.querySelector(".theme-toggle");
+            const menuToggle = document.querySelector(".menu-toggle");
+            const primaryNav = document.querySelector("#primary-nav");
+            const label = toggle.querySelector(".theme-toggle-label");
+            const systemPreference = window.matchMedia("(prefers-color-scheme: light)");
+
+            const closeMenu = () => {
+                primaryNav.classList.remove("is-open");
+                menuToggle.classList.remove("is-open");
+                menuToggle.setAttribute("aria-expanded", "false");
+                menuToggle.setAttribute("aria-label", "Open navigation");
+            };
+
+            menuToggle.addEventListener("click", () => {
+                const isOpen = primaryNav.classList.toggle("is-open");
+                menuToggle.classList.toggle("is-open", isOpen);
+                menuToggle.setAttribute("aria-expanded", String(isOpen));
+                menuToggle.setAttribute("aria-label", isOpen ? "Close navigation" : "Open navigation");
+            });
+
+            primaryNav.querySelectorAll("a").forEach((link) => {
+                link.addEventListener("click", closeMenu);
+            });
+
+            document.addEventListener("keydown", (event) => {
+                if (event.key === "Escape") closeMenu();
+            });
+
+            const closePlayer = (item) => {
+                if (!item) return;
+                const audio = item.closest("li").querySelector("audio");
+                if (audio) {
+                    audio.pause();
+                    audio.currentTime = 0;
+                }
+                const player = item.closest("li").querySelector(".discography-player");
+                if (player) player.hidden = true;
+                item.classList.remove("is-player-open");
+            };
+
+            const openPlayer = (item) => {
+                const openItem = document.querySelector(".discography-item.is-player-open");
+
+                if (item.classList.contains("is-player-open")) {
+                    closePlayer(item);
+                    return;
+                }
+
+                closePlayer(openItem);
+                const listItem = item.closest("li");
+                let player = listItem.querySelector(".discography-player");
+
+                if (!player) {
+                    player = document.createElement("div");
+                    player.className = "discography-player";
+
+                    const audio = document.createElement("audio");
+                    audio.controls = true;
+                    audio.preload = "metadata";
+                    audio.src = item.dataset.audioSrc;
+
+                    player.append(audio);
+                    listItem.append(player);
+                }
+
+                player.hidden = false;
+                item.classList.add("is-player-open");
+            };
+
+            document.querySelectorAll(".discography-item").forEach((item) => {
+                item.addEventListener("click", (event) => {
+                    if (event.target.closest("a, audio")) return;
+                    openPlayer(item);
+                });
+
+                item.addEventListener("keydown", (event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        openPlayer(item);
+                    }
+                });
+            });
+
+            const savedTheme = () => {
+                try {
+                    return localStorage.getItem("portfolio-theme");
+                } catch {
+                    return null;
+                }
+            };
+
+            const applyTheme = (theme, persist = false) => {
+                root.dataset.theme = theme;
+                const nextTheme = theme === "dark" ? "light" : "dark";
+                toggle.setAttribute("aria-pressed", String(theme === "light"));
+                toggle.setAttribute("aria-label", `Switch to ${nextTheme} mode`);
+                label.textContent = nextTheme === "light" ? "Light" : "Dark";   // kalau light theme, label jadi "Dark" dan sebaliknya
+
+                if (persist) {
+                    try {
+                        localStorage.setItem("portfolio-theme", theme);
+                    } catch {
+                        // theme akan tetap teraplikasi meski storage unavailable
+                    }
+                }
+            };
+
+            applyTheme(root.dataset.theme || "dark");
+            toggle.addEventListener("click", () => {    // yang dieksekusi kalau button diklik
+                applyTheme(root.dataset.theme === "dark" ? "light" : "dark", true);
+            });
+            systemPreference.addEventListener("change", (event) => {    // yang dieksekusi kalau setting sistem/browser diubah kalau user belum pilih theme
+                if (!savedTheme()) {
+                    applyTheme(event.matches ? "light" : "dark");
+                }
+            });
+        })();
+    </script>
+</body>
+</html>
