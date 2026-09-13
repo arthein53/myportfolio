@@ -31,6 +31,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-k12q5xaucqs^(jgi=^=@8(+)+r4@+0w)&uc=)(06%-b-b_0$e4'
 
+# PWS terminates HTTPS at its trusted reverse proxy before Gunicorn.
+# Django must honor the forwarded protocol for secure CSRF origin checks.
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
 # Disable detailed error pages when deployed.
 DEBUG = not PRODUCTION
 
