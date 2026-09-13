@@ -23,15 +23,16 @@
 <body>
     <header class="site-header">
         <div class="container">
-            <a href="#profile" class="brand">Arlen</a>
+            <a href="{% url 'main:show_main' %}" class="brand">{{ name }}</a>
             <button class="menu-toggle" type="button" aria-label="Open navigation" aria-controls="primary-nav" aria-expanded="false">
                 <span></span><span></span><span></span>
             </button>
             <nav id="primary-nav" aria-label="Primary navigation">
-                <a href="#profile">Profile</a>
+                <a href="{% url 'main:show_main' %}">Profile</a>
                 <a href="#skills">Skills</a>
                 <a href="#projects">Projects</a>
                 <a href="#discography">Discography</a>
+                <a href="{% url 'main:show_experience' %}">Experience</a>
                 <button class="theme-toggle" type="button" aria-label="Switch color theme" aria-pressed="false">    <!-- tombol toggle light/dark theme, penerapan aria direkomendasikan AI -->
                     <span class="theme-toggle-mark" aria-hidden="true"></span>
                     <span class="theme-toggle-label">Light</span>
@@ -48,20 +49,20 @@
                     <h1>Rafael <span>Arlen</span> Wijanarko</h1>
                 </div>
                 <figure class="hero-photo">
-                    <img class="avatar" src="/static/img/Professional Photo.png" alt="Photo of Arlen">
+                    <img class="avatar" src="/static/img/Professional Photo.png" alt="Photo of {{ name }}">
                     <figcaption>Computer, music &amp; everything between.</figcaption>
                 </figure>
                 <div class="hero-details">
                     <p class="hero-statement">Training models. Dropping tracks.</p>
-                    <p class="bio">I work across data, AI/ML, and music-making, interested in how technical systems and creative practice can make each other more meaningful.</p>
+                    <p class="bio">{{ bio }}</p>
                     <dl class="meta-list">
                         <div class="meta-row">
                             <dt>NPM</dt>
-                            <dd>2506613514</dd>
+                            <dd>{{npm}}</dd>
                         </div>
                         <div class="meta-row">
                             <dt>Program</dt>
-                            <dd>S1 Ilmu Komputer</dd>
+                            <dd>{{ study_program }}</dd>
                         </div>
                     </dl>
                     <div class="social-links">
@@ -354,7 +355,7 @@
 
     <footer class="site-footer">
         <div class="container">
-            <p>&copy; 2026 Arlen. Fakultas Ilmu Komputer, Universitas Indonesia.</p>
+            <p>&copy; 2026 {{ name }}. Fakultas Ilmu Komputer, Universitas Indonesia.</p>
         </div>
     </footer>
     <script>    // logika dan syntax js dibantu (diajari) oleh AI

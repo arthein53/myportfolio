@@ -15,12 +15,12 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import include, path
 
-from portfolio.views import audio_file, landing_page
+from portfolio.views import audio_file
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('audio/<str:filename>', audio_file, name='audio_file'),
-    path('', landing_page, name='landing_page'),
+    path('', include('main.urls')),
 ]

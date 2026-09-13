@@ -1,4 +1,4 @@
-﻿django
+﻿Django>=6.0,<6.1
 gunicorn
 whitenoise
 psycopg2-binary
