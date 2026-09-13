@@ -1,3 +1,4 @@
+from django.contrib import admin
 from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
@@ -12,6 +13,9 @@ class MainTest(TestCase):
             description="Membantu mahasiswa memahami pengembangan web.",
             category="part-time",
         )
+
+    def test_experience_is_registered_in_admin(self):
+        self.assertIn(Experience, admin.site._registry)
 
     def test_main_url_is_accessible(self):
         response = self.client.get(reverse("main:show_main"))
