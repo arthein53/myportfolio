@@ -852,22 +852,90 @@ h1 {
 }
 
 .experience-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
     margin-top: 2.5rem;
-    border-top: 1px solid var(--line);
+    counter-reset: experience-card;
 }
 
 .experience-card {
-    display: grid;
-    grid-template-columns: minmax(8rem, 12rem) minmax(0, 1fr) auto;
-    gap: 2rem;
-    align-items: start;
-    padding: 2rem 1.5rem;
-    border-bottom: 1px solid var(--line);
-    background-color: var(--paper);
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    background-color: var(--surface);
+    box-shadow: 0 0 0 transparent;
+    counter-increment: experience-card;
+    transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease, background-color 180ms ease;
 }
 
-.experience-card:nth-child(even) {
+.experience-card:hover {
+    border-color: var(--accent);
+    box-shadow: 6px 6px 0 var(--accent);
+    transform: translate(-3px, -3px);
+}
+
+.experience-thumbnail {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border-bottom: 1px solid var(--line);
+    object-fit: cover;
     background-color: var(--hero-background);
+}
+
+.experience-thumbnail-placeholder {
+    position: relative;
+    display: grid;
+    overflow: hidden;
+    place-items: end start;
+    padding: 1rem;
+    isolation: isolate;
+    color: var(--accent-dark);
+    background-color: var(--hero-background);
+}
+
+.experience-thumbnail-placeholder::before {
+    position: absolute;
+    z-index: -1;
+    top: -22%;
+    right: -10%;
+    width: 72%;
+    height: 145%;
+    content: "";
+    border-left: 1px solid var(--line);
+    background-color: var(--surface-raised);
+    transform: rotate(23deg);
+}
+
+.experience-thumbnail-placeholder::after {
+    position: absolute;
+    top: 0.8rem;
+    right: 1rem;
+    content: counter(experience-card, decimal-leading-zero);
+    color: var(--accent);
+    font-size: clamp(2.4rem, 6vw, 4.5rem);
+    font-weight: 700;
+    letter-spacing: -0.08em;
+    line-height: 1;
+}
+
+.experience-thumbnail-placeholder span {
+    position: relative;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.experience-card-content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1.25rem;
 }
 
 .experience-category {
@@ -879,8 +947,27 @@ h1 {
 }
 
 .experience-card h2 {
-    margin: 0;
-    font-size: clamp(1.25rem, 2.4vw, 1.75rem);
+    margin: 0.7rem 0 0;
+    font-size: clamp(1.25rem, 2.4vw, 1.65rem);
+    line-height: 1.15;
+}
+
+.experience-position {
+    margin: 0.25rem 0 0;
+    color: var(--accent);
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+.experience-period {
+    margin: 1rem 0 0;
+    padding: 0.3rem 0.65rem;
+    border: 1px solid var(--accent);
+    border-radius: var(--radius);
+    color: var(--accent-dark);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
 }
 
 .experience-description,
@@ -888,16 +975,22 @@ h1 {
     color: var(--text-muted);
 }
 
+.experience-description {
+    margin: 0.85rem 0 0;
+}
+
 .experience-status {
+    margin: auto 0 0;
+    padding-top: 1.5rem;
     color: var(--accent-dark);
     font-size: 0.85rem;
     font-weight: 600;
-    white-space: nowrap;
 }
 
 .empty-state {
+    grid-column: 1 / -1;
     padding: 2rem 1.5rem;
-    border-bottom: 1px solid var(--line);
+    border: 1px solid var(--line);
 }
 
 /* Footer & Responsive */
@@ -914,6 +1007,12 @@ a:focus-visible,
 button:focus-visible {
     outline: 2px solid var(--focus);
     outline-offset: 4px;
+}
+
+@media (max-width: 900px) {
+    .experience-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }
 
 @media (max-width: 600px) {
@@ -1048,13 +1147,15 @@ button:focus-visible {
         padding: 4rem 0 5rem;
     }
 
-    .experience-card {
+    .experience-grid {
         grid-template-columns: 1fr;
-        gap: 0.75rem;
-        padding: 1.5rem 1rem;
+    }
+
+    .experience-card-content {
+        padding: 1rem;
     }
 
     .experience-status {
-        justify-self: end;
+        padding-top: 1.25rem;
     }
 }

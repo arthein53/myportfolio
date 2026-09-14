@@ -5,9 +5,9 @@ from .models import DiscographyEntry, Experience, Project
 
 @admin.register(Experience)
 class ExperienceAdmin(admin.ModelAdmin):
-    list_display = ("title", "category", "is_ongoing", "started_at", "ended_at")
+    list_display = ("organization", "position", "category", "is_ongoing", "period")
     list_filter = ("category", "ended_at")
-    search_fields = ("title", "description")
+    search_fields = ("organization", "position", "title", "description")
     readonly_fields = ("id", "started_at")
     ordering = ("-started_at",)
 
