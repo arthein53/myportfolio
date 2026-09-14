@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -18,7 +19,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
     <header class="site-header">
@@ -49,7 +50,7 @@
                     <h1>Rafael <span>Arlen</span> Wijanarko</h1>
                 </div>
                 <figure class="hero-photo">
-                    <img class="avatar" src="/static/img/Professional Photo.png" alt="Photo of {{ name }}">
+                    <img class="avatar" src="{% static 'img/Professional Photo.png' %}" alt="Photo of {{ name }}">
                     <figcaption>Computer, music &amp; everything between.</figcaption>
                 </figure>
                 <div class="hero-details">
@@ -66,9 +67,9 @@
                         </div>
                     </dl>
                     <div class="social-links">
-                        <a href="https://github.com/arthein53/" class="social-link" aria-label="GitHub" title="GitHub"><span class="github-icon" aria-hidden="true"><img class="github-icon-light" src="/static/img/social-icons/github.svg" alt=""><img class="github-icon-dark" src="/static/img/social-icons/github-white.webp" alt=""></span></a>
-                        <a href="https://www.linkedin.com/in/rafael-arlen-wijanarko-84ba83218/" class="social-link" aria-label="LinkedIn" title="LinkedIn"><img src="/static/img/social-icons/linkedin.png" alt=""></a>
-                        <a href="mailto:arlenwijanarko250307@gmail.com" class="social-link" aria-label="Email" title="Email"><img src="/static/img/social-icons/gmail.png" alt=""></a>
+                        <a href="https://github.com/arthein53/" class="social-link" aria-label="GitHub" title="GitHub"><span class="github-icon" aria-hidden="true"><img class="github-icon-light" src="{% static 'img/social-icons/github.svg' %}" alt=""><img class="github-icon-dark" src="{% static 'img/social-icons/github-white.webp' %}" alt=""></span></a>
+                        <a href="https://www.linkedin.com/in/rafael-arlen-wijanarko-84ba83218/" class="social-link" aria-label="LinkedIn" title="LinkedIn"><img src="{% static 'img/social-icons/linkedin.png' %}" alt=""></a>
+                        <a href="mailto:arlenwijanarko250307@gmail.com" class="social-link" aria-label="Email" title="Email"><img src="{% static 'img/social-icons/gmail.png' %}" alt=""></a>
                     </div>
                 </div>
             </div>
@@ -86,36 +87,36 @@
                     <div class="skills-window" tabindex="0" aria-label="Technology tools">
                         <div class="skills-track skills-track-tech">
                             <ul class="skills-set">
-                                <li class="skills-card"><img src="/static/img/skill-icons/vs-code-transparent.png" alt="" loading="lazy" decoding="async"><span>VS Code</span></li>
-                                <li class="skills-card"><img src="/static/img/skill-icons/git.svg" alt="" loading="lazy" decoding="async"><span>Git</span></li>
-                                <li class="skills-card"><img src="/static/img/skill-icons/python.webp" alt="" loading="lazy" decoding="async"><span>Python</span></li>
-                                <li class="skills-card"><img src="/static/img/skill-icons/pytorch.svg" alt="" loading="lazy" decoding="async"><span>PyTorch</span></li>
-                                <li class="skills-card"><img src="/static/img/skill-icons/java-transparent.webp" alt="" loading="lazy" decoding="async"><span>Java</span></li>
-                                <li class="skills-card"><img src="/static/img/skill-icons/html5.png" alt="" loading="lazy" decoding="async"><span>HTML5</span></li>
-                                <li class="skills-card"><img src="/static/img/skill-icons/css3.png" alt="" loading="lazy" decoding="async"><span>CSS3</span></li>
-                                <li class="skills-card"><img src="/static/img/skill-icons/javascript.webp" alt="" loading="lazy" decoding="async"><span>JavaScript</span></li>
-                                <li class="skills-card"><img src="/static/img/skill-icons/cpp.webp" alt="" loading="lazy" decoding="async"><span>C++</span></li>
-                                <li class="skills-card"><img src="/static/img/skill-icons/c.png" alt="" loading="lazy" decoding="async"><span>C</span></li>
-                                <li class="skills-card"><span class="github-icon" aria-hidden="true"><img class="github-icon-light" src="/static/img/skill-icons/github.svg" alt="" loading="lazy" decoding="async"><img class="github-icon-dark" src="/static/img/skill-icons/github-white.webp" alt="" loading="lazy" decoding="async"></span><span>GitHub</span></li>
-                                <li class="skills-card"><img src="/static/img/skill-icons/google-colab.webp" alt="" loading="lazy" decoding="async"><span>Google Colab</span></li>
-                                <li class="skills-card"><img src="/static/img/skill-icons/figma.png" alt="" loading="lazy" decoding="async"><span>Figma</span></li>
-                                <li class="skills-card"><img src="/static/img/skill-icons/overleaf.svg" alt="" loading="lazy" decoding="async"><span>Overleaf</span></li>
+                                <li class="skills-card"><img src="{% static 'img/skill-icons/vs-code-transparent.png' %}" alt="" loading="lazy" decoding="async"><span>VS Code</span></li>
+                                <li class="skills-card"><img src="{% static 'img/skill-icons/git.svg' %}" alt="" loading="lazy" decoding="async"><span>Git</span></li>
+                                <li class="skills-card"><img src="{% static 'img/skill-icons/python.webp' %}" alt="" loading="lazy" decoding="async"><span>Python</span></li>
+                                <li class="skills-card"><img src="{% static 'img/skill-icons/pytorch.svg' %}" alt="" loading="lazy" decoding="async"><span>PyTorch</span></li>
+                                <li class="skills-card"><img src="{% static 'img/skill-icons/java-transparent.webp' %}" alt="" loading="lazy" decoding="async"><span>Java</span></li>
+                                <li class="skills-card"><img src="{% static 'img/skill-icons/html5.png' %}" alt="" loading="lazy" decoding="async"><span>HTML5</span></li>
+                                <li class="skills-card"><img src="{% static 'img/skill-icons/css3.png' %}" alt="" loading="lazy" decoding="async"><span>CSS3</span></li>
+                                <li class="skills-card"><img src="{% static 'img/skill-icons/javascript.webp' %}" alt="" loading="lazy" decoding="async"><span>JavaScript</span></li>
+                                <li class="skills-card"><img src="{% static 'img/skill-icons/cpp.webp' %}" alt="" loading="lazy" decoding="async"><span>C++</span></li>
+                                <li class="skills-card"><img src="{% static 'img/skill-icons/c.png' %}" alt="" loading="lazy" decoding="async"><span>C</span></li>
+                                <li class="skills-card"><span class="github-icon" aria-hidden="true"><img class="github-icon-light" src="{% static 'img/skill-icons/github.svg' %}" alt="" loading="lazy" decoding="async"><img class="github-icon-dark" src="{% static 'img/skill-icons/github-white.webp' %}" alt="" loading="lazy" decoding="async"></span><span>GitHub</span></li>
+                                <li class="skills-card"><img src="{% static 'img/skill-icons/google-colab.webp' %}" alt="" loading="lazy" decoding="async"><span>Google Colab</span></li>
+                                <li class="skills-card"><img src="{% static 'img/skill-icons/figma.png' %}" alt="" loading="lazy" decoding="async"><span>Figma</span></li>
+                                <li class="skills-card"><img src="{% static 'img/skill-icons/overleaf.svg' %}" alt="" loading="lazy" decoding="async"><span>Overleaf</span></li>
                             </ul>
                             <ul class="skills-set" aria-hidden="true"> <!-- semua skill diduplikasi agar transisi saat selesai loop lebih smooth, ide teknik diberikan AI -->
-                                <li class="skills-card"><img src="/static/img/skill-icons/vs-code-transparent.png" alt="" loading="lazy" decoding="async"><span>VS Code</span></li>
-                                <li class="skills-card"><img src="/static/img/skill-icons/git.svg" alt="" loading="lazy" decoding="async"><span>Git</span></li>
-                                <li class="skills-card"><img src="/static/img/skill-icons/python.webp" alt="" loading="lazy" decoding="async"><span>Python</span></li>
-                                <li class="skills-card"><img src="/static/img/skill-icons/pytorch.svg" alt="" loading="lazy" decoding="async"><span>PyTorch</span></li>
-                                <li class="skills-card"><img src="/static/img/skill-icons/java-transparent.webp" alt="" loading="lazy" decoding="async"><span>Java</span></li>
-                                <li class="skills-card"><img src="/static/img/skill-icons/html5.png" alt="" loading="lazy" decoding="async"><span>HTML5</span></li>
-                                <li class="skills-card"><img src="/static/img/skill-icons/css3.png" alt="" loading="lazy" decoding="async"><span>CSS3</span></li>
-                                <li class="skills-card"><img src="/static/img/skill-icons/javascript.webp" alt="" loading="lazy" decoding="async"><span>JavaScript</span></li>
-                                <li class="skills-card"><img src="/static/img/skill-icons/cpp.webp" alt="" loading="lazy" decoding="async"><span>C++</span></li>
-                                <li class="skills-card"><img src="/static/img/skill-icons/c.png" alt="" loading="lazy" decoding="async"><span>C</span></li>
-                                <li class="skills-card"><span class="github-icon" aria-hidden="true"><img class="github-icon-light" src="/static/img/skill-icons/github.svg" alt="" loading="lazy" decoding="async"><img class="github-icon-dark" src="/static/img/skill-icons/github-white.webp" alt="" loading="lazy" decoding="async"></span><span>GitHub</span></li>
-                                <li class="skills-card"><img src="/static/img/skill-icons/google-colab.webp" alt="" loading="lazy" decoding="async"><span>Google Colab</span></li>
-                                <li class="skills-card"><img src="/static/img/skill-icons/figma.png" alt="" loading="lazy" decoding="async"><span>Figma</span></li>
-                                <li class="skills-card"><img src="/static/img/skill-icons/overleaf.svg" alt="" loading="lazy" decoding="async"><span>Overleaf</span></li>
+                                <li class="skills-card"><img src="{% static 'img/skill-icons/vs-code-transparent.png' %}" alt="" loading="lazy" decoding="async"><span>VS Code</span></li>
+                                <li class="skills-card"><img src="{% static 'img/skill-icons/git.svg' %}" alt="" loading="lazy" decoding="async"><span>Git</span></li>
+                                <li class="skills-card"><img src="{% static 'img/skill-icons/python.webp' %}" alt="" loading="lazy" decoding="async"><span>Python</span></li>
+                                <li class="skills-card"><img src="{% static 'img/skill-icons/pytorch.svg' %}" alt="" loading="lazy" decoding="async"><span>PyTorch</span></li>
+                                <li class="skills-card"><img src="{% static 'img/skill-icons/java-transparent.webp' %}" alt="" loading="lazy" decoding="async"><span>Java</span></li>
+                                <li class="skills-card"><img src="{% static 'img/skill-icons/html5.png' %}" alt="" loading="lazy" decoding="async"><span>HTML5</span></li>
+                                <li class="skills-card"><img src="{% static 'img/skill-icons/css3.png' %}" alt="" loading="lazy" decoding="async"><span>CSS3</span></li>
+                                <li class="skills-card"><img src="{% static 'img/skill-icons/javascript.webp' %}" alt="" loading="lazy" decoding="async"><span>JavaScript</span></li>
+                                <li class="skills-card"><img src="{% static 'img/skill-icons/cpp.webp' %}" alt="" loading="lazy" decoding="async"><span>C++</span></li>
+                                <li class="skills-card"><img src="{% static 'img/skill-icons/c.png' %}" alt="" loading="lazy" decoding="async"><span>C</span></li>
+                                <li class="skills-card"><span class="github-icon" aria-hidden="true"><img class="github-icon-light" src="{% static 'img/skill-icons/github.svg' %}" alt="" loading="lazy" decoding="async"><img class="github-icon-dark" src="{% static 'img/skill-icons/github-white.webp' %}" alt="" loading="lazy" decoding="async"></span><span>GitHub</span></li>
+                                <li class="skills-card"><img src="{% static 'img/skill-icons/google-colab.webp' %}" alt="" loading="lazy" decoding="async"><span>Google Colab</span></li>
+                                <li class="skills-card"><img src="{% static 'img/skill-icons/figma.png' %}" alt="" loading="lazy" decoding="async"><span>Figma</span></li>
+                                <li class="skills-card"><img src="{% static 'img/skill-icons/overleaf.svg' %}" alt="" loading="lazy" decoding="async"><span>Overleaf</span></li>
                             </ul>
                         </div>
                     </div>
@@ -125,26 +126,26 @@
                     <div class="skills-window" tabindex="0" aria-label="Music tools and instruments">
                         <div class="skills-track skills-track-music">
                             <ul class="skills-set">
-                                <li class="skills-card"><img src="/static/img/skill-icons/cubase-transparent.webp" alt="" loading="lazy" decoding="async"><span>Cubase</span></li>
-                                <li class="skills-card"><img src="/static/img/skill-icons/fl-studio-transparent.webp" alt="" loading="lazy" decoding="async"><span>FL Studio</span></li>
-                                <li class="skills-card"><img src="/static/img/skill-icons/studio-one-transparent.webp" alt="" loading="lazy" decoding="async"><span>Studio One</span></li>
-                                <li class="skills-card"><img src="/static/img/skill-icons/musescore.svg" alt="" loading="lazy" decoding="async"><span>MuseScore</span></li>
-                                <li class="skills-card"><img src="/static/img/skill-icons/sibelius.jpg" alt="" loading="lazy" decoding="async"><span>Sibelius</span></li>
-                                <li class="skills-card"><img src="/static/img/skill-icons/piano-transparent.webp" alt="" loading="lazy" decoding="async"><span>Keys</span></li>
-                                <li class="skills-card"><img src="/static/img/skill-icons/trombone-transparent.webp" alt="" loading="lazy" decoding="async"><span>Trombone</span></li>
-                                <li class="skills-card"><img src="/static/img/skill-icons/drums.png" alt="" loading="lazy" decoding="async"><span>Drums</span></li>
-                                <li class="skills-card"><img src="/static/img/skill-icons/bass-transparent.webp" alt="" loading="lazy" decoding="async"><span>Bass</span></li>
+                                <li class="skills-card"><img src="{% static 'img/skill-icons/cubase-transparent.webp' %}" alt="" loading="lazy" decoding="async"><span>Cubase</span></li>
+                                <li class="skills-card"><img src="{% static 'img/skill-icons/fl-studio-transparent.webp' %}" alt="" loading="lazy" decoding="async"><span>FL Studio</span></li>
+                                <li class="skills-card"><img src="{% static 'img/skill-icons/studio-one-transparent.webp' %}" alt="" loading="lazy" decoding="async"><span>Studio One</span></li>
+                                <li class="skills-card"><img src="{% static 'img/skill-icons/musescore.svg' %}" alt="" loading="lazy" decoding="async"><span>MuseScore</span></li>
+                                <li class="skills-card"><img src="{% static 'img/skill-icons/sibelius.jpg' %}" alt="" loading="lazy" decoding="async"><span>Sibelius</span></li>
+                                <li class="skills-card"><img src="{% static 'img/skill-icons/piano-transparent.webp' %}" alt="" loading="lazy" decoding="async"><span>Keys</span></li>
+                                <li class="skills-card"><img src="{% static 'img/skill-icons/trombone-transparent.webp' %}" alt="" loading="lazy" decoding="async"><span>Trombone</span></li>
+                                <li class="skills-card"><img src="{% static 'img/skill-icons/drums.png' %}" alt="" loading="lazy" decoding="async"><span>Drums</span></li>
+                                <li class="skills-card"><img src="{% static 'img/skill-icons/bass-transparent.webp' %}" alt="" loading="lazy" decoding="async"><span>Bass</span></li>
                             </ul>
                             <ul class="skills-set" aria-hidden="true">
-                                <li class="skills-card"><img src="/static/img/skill-icons/cubase-transparent.webp" alt="" loading="lazy" decoding="async"><span>Cubase</span></li>
-                                <li class="skills-card"><img src="/static/img/skill-icons/fl-studio-transparent.webp" alt="" loading="lazy" decoding="async"><span>FL Studio</span></li>
-                                <li class="skills-card"><img src="/static/img/skill-icons/studio-one-transparent.webp" alt="" loading="lazy" decoding="async"><span>Studio One</span></li>
-                                <li class="skills-card"><img src="/static/img/skill-icons/musescore.svg" alt="" loading="lazy" decoding="async"><span>MuseScore</span></li>
-                                <li class="skills-card"><img src="/static/img/skill-icons/sibelius.jpg" alt="" loading="lazy" decoding="async"><span>Sibelius</span></li>
-                                <li class="skills-card"><img src="/static/img/skill-icons/piano-transparent.webp" alt="" loading="lazy" decoding="async"><span>Keys</span></li>
-                                <li class="skills-card"><img src="/static/img/skill-icons/trombone-transparent.webp" alt="" loading="lazy" decoding="async"><span>Trombone</span></li>
-                                <li class="skills-card"><img src="/static/img/skill-icons/drums.png" alt="" loading="lazy" decoding="async"><span>Drums</span></li>
-                                <li class="skills-card"><img src="/static/img/skill-icons/bass-transparent.webp" alt="" loading="lazy" decoding="async"><span>Bass</span></li>
+                                <li class="skills-card"><img src="{% static 'img/skill-icons/cubase-transparent.webp' %}" alt="" loading="lazy" decoding="async"><span>Cubase</span></li>
+                                <li class="skills-card"><img src="{% static 'img/skill-icons/fl-studio-transparent.webp' %}" alt="" loading="lazy" decoding="async"><span>FL Studio</span></li>
+                                <li class="skills-card"><img src="{% static 'img/skill-icons/studio-one-transparent.webp' %}" alt="" loading="lazy" decoding="async"><span>Studio One</span></li>
+                                <li class="skills-card"><img src="{% static 'img/skill-icons/musescore.svg' %}" alt="" loading="lazy" decoding="async"><span>MuseScore</span></li>
+                                <li class="skills-card"><img src="{% static 'img/skill-icons/sibelius.jpg' %}" alt="" loading="lazy" decoding="async"><span>Sibelius</span></li>
+                                <li class="skills-card"><img src="{% static 'img/skill-icons/piano-transparent.webp' %}" alt="" loading="lazy" decoding="async"><span>Keys</span></li>
+                                <li class="skills-card"><img src="{% static 'img/skill-icons/trombone-transparent.webp' %}" alt="" loading="lazy" decoding="async"><span>Trombone</span></li>
+                                <li class="skills-card"><img src="{% static 'img/skill-icons/drums.png' %}" alt="" loading="lazy" decoding="async"><span>Drums</span></li>
+                                <li class="skills-card"><img src="{% static 'img/skill-icons/bass-transparent.webp' %}" alt="" loading="lazy" decoding="async"><span>Bass</span></li>
                             </ul>
                         </div>
                     </div>
