@@ -37,6 +37,7 @@ class Project(models.Model):
     organization = models.CharField(max_length=255)
     link_label = models.CharField(max_length=100)
     link_url = models.URLField()
+    tags = models.JSONField(default=list, blank=True, help_text='Example: ["Django", "Python"]')
     order = models.PositiveSmallIntegerField(default=0, db_index=True)
 
     class Meta:
@@ -44,19 +45,6 @@ class Project(models.Model):
 
     def __str__(self):
         return self.title
-
-
-class ProjectTag(models.Model):
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="tags")
-    label = models.CharField(max_length=80)
-    order = models.PositiveSmallIntegerField(default=0)
-
-    class Meta:
-        ordering = ("order", "label")
-        constraints = [models.UniqueConstraint(fields=("project", "label"), name="unique_project_tag")]
-
-    def __str__(self):
-        return self.label
 
 
 class DiscographyEntry(models.Model):
@@ -70,6 +58,12 @@ class DiscographyEntry(models.Model):
     release_type = models.CharField(max_length=100)
     context = models.CharField(max_length=255)
     audio_filename = models.CharField(max_length=255, validators=[safe_audio_filename])
+    roles = models.JSONField(default=list, blank=True, help_text='Example: ["Writer", "Composer"]')
+    links = models.JSONField(
+        default=list,
+        blank=True,
+        help_text='Example: [{"label": "Listen", "url": "https://example.com"}]',
+    )
     order = models.PositiveSmallIntegerField(default=0, db_index=True)
 
     class Meta:
@@ -78,29 +72,3 @@ class DiscographyEntry(models.Model):
 
     def __str__(self):
         return self.title
-
-
-class DiscographyRole(models.Model):
-    entry = models.ForeignKey(DiscographyEntry, on_delete=models.CASCADE, related_name="roles")
-    label = models.CharField(max_length=100)
-    order = models.PositiveSmallIntegerField(default=0)
-
-    class Meta:
-        ordering = ("order", "label")
-        constraints = [models.UniqueConstraint(fields=("entry", "label"), name="unique_discography_role")]
-
-    def __str__(self):
-        return self.label
-
-
-class DiscographyLink(models.Model):
-    entry = models.ForeignKey(DiscographyEntry, on_delete=models.CASCADE, related_name="links")
-    label = models.CharField(max_length=100)
-    url = models.URLField()
-    order = models.PositiveSmallIntegerField(default=0)
-
-    class Meta:
-        ordering = ("order", "label")
-
-    def __str__(self):
-        return f"{self.entry}: {self.label}"
