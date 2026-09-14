@@ -25,3 +25,21 @@ Detail section yang dibantu AI:
 2. Skills Loop Animation
 3. Discography Audio Playback
 4. Pemilihan Color Palette
+
+
+### TUGAS 2
+## JAWABAN PERTANYAAN REFLEKTIF
+1. Saat user buka homepage, yaitu http://localhost:8000/ (local) atau https://rafael-arlen-myportfolio.pws.cs.ui.ac.id/ (production), browser mengirim HTTP request ke server Django. Request akan masuk ke portfolio/urls.py sebagai file routing utama project. path('', include('main.urls')) membuat request diteruskan ke main/urls.py karena URL yang dibuka adalah /. Di main/urls.py, path "" diarahkan ke view show_main. Lalu, Django akan run fungsi show_main() pada main/views.py. View berfungsi menyiapkan data yang dibutuhkan homepage. Data name, npm, study_program, bio, dll dimasukkan langsung ke context. Data yang sudah disiapkan view lalu akan dikirim ke templates/index.html. Setelah index.html selesai dirender dengan data dari context, Django akan mengirim HTML ke browser. Browser lalu load CSS dari static file, gambar, JavaScript untuk menu, audio player, dll. Terakhir, user dapat melihat homepage portofolio yang berisi profil, skills, project, dan discography.
+
+2. Data untuk section portfolio, seperti Project, DiscographyEntry, dan Experience lebih baik disimpan di model daripada ditulis langsung di template karena model dapat mengelola data secara terstruktur di database. Jika data ditulis langsung di template, setiap kali saya ingin menambahkan pengalaman baru atau update deskripsi project, saya harus mengubah isi HTML secara manual. Cara tersebut tidak efisien dan berpotensi menghasilkan duplikasi kode, terutama karena setiap kartu experience atau project punya struktur HTML yang mirip. Selain itu dengan model, saya bisa menambahkan atau update data lewat Django Admin page tanpa harus mengedit template.
+
+3. Makemigrations digunakan untuk mendeteksi update pada model dan membuat file migration baru. File migration berisi instruksi perubahan struktur database, tapi perintah ini tidak mengubah database secara langsung. Migrate digunakan untuk menjalankan migration yang sudah dibuat ke database. Setelah perintah ini dijalankan, struktur tabel pada database akan dibuat atau diupdate.
+
+## AI DISCLOSURE
+Dalam pengerjaan Tugas 2, saya menggunakan GPT-5.6-terra terutama dalam proses debugging, proses-proses repetitif, dan minta penjelasan tentang konsep dan cara kerja MVT.
+
+Detail section yang dibantu AI:
+1. Isi seed_portfolio EXPERIENCES, saya ekstrak data pengalaman saya dari LinkedIn dan lempar ke LLM untuk generate EXPERIENCES yang sudah terstruktur dan rapih.
+2. Refactor Project dan Discography ke MVT dipandu AI.
+
+

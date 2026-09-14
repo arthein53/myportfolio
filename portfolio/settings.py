@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/6.1/ref/settings/
 
 from pathlib import Path
 import os
+from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
 # Load environment variables from .env file
 load_dotenv()
@@ -28,11 +29,27 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-k12q5xaucqs^(jgi=^=@8(+)+r4@+0w)&uc=)(06%-b-b_0$e4'
+# Production secrets must never be committed. A development-only fallback keeps
+# local setup friction-free while production fails closed if the secret is absent.
+SECRET_KEY = os.getenv("SECRET_KEY")
+if not SECRET_KEY:
+    if PRODUCTION:
+        raise ImproperlyConfigured("SECRET_KEY must be set when PRODUCTION=True")
+    SECRET_KEY = "django-insecure-development-only-not-for-deployment"
+
+# PWS terminates HTTPS at its trusted reverse proxy before Gunicorn.
+# Django must honor the forwarded protocol for secure CSRF origin checks.
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # Disable detailed error pages when deployed.
 DEBUG = not PRODUCTION
+
+if PRODUCTION:
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = 31_536_000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 
 
 # Application definition
@@ -141,7 +158,12 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-WHITENOISE_USE_FINDERS = True
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
+WHITENOISE_KEEP_ONLY_HASHED_FILES = True
 
 
 # Email

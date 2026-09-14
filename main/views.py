@@ -1,5 +1,7 @@
 from django.shortcuts import render
-from main.models import Experience
+
+from main.models import DiscographyEntry, Experience, Project
+
 
 def show_main(request):
     context = {
@@ -9,8 +11,11 @@ def show_main(request):
         "bio": (
             "I work across data, AI/ML, and music-making, interested in how technical systems and creative practice can make each other more meaningful."
         ),
+        "projects": Project.objects.all(),
+        "discography_entries": DiscographyEntry.objects.all(),
     }
     return render(request, "index.html", context)
+
 
 def show_experience(request):
     context = {

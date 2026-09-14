@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -18,7 +19,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
     <header class="site-header">
@@ -44,29 +45,40 @@
     <main>
         <section class="experience-section" id="experience">
             <div class="container">
-                <p class="section-kicker">Perjalanan saya sejauh ini</p>
+                <p class="section-kicker">My journey</p>
                 <h1>Experience</h1>
 
                 <div class="experience-grid">
                     {% for experience in experience_list %}
                         <article class="experience-card">
-                            <span class="experience-category">
-                                {{ experience.get_category_display }}
-                            </span>
-                            <h2>{{ experience.title }}</h2>
-                            <p class="experience-description">
-                                {{ experience.description }}
-                            </p>
-
-                            {% if experience.is_ongoing %}
-                                <p class="experience-status">Sedang berlangsung</p>
+                            {% if experience.thumbnail %}
+                                <img class="experience-thumbnail" src="{{ experience.thumbnail }}" alt="Thumbnail for {{ experience.title }}" loading="lazy">
                             {% else %}
-                                <p class="experience-status">Selesai</p>
+                                <div class="experience-thumbnail experience-thumbnail-placeholder" aria-hidden="true">
+                                    <span>Experience</span>
+                                </div>
                             {% endif %}
+                            <div class="experience-card-content">
+                                <span class="experience-category">
+                                    {{ experience.get_category_display }}
+                                </span>
+                                <h2>{{ experience.organization|default:experience.title }}</h2>
+                                {% if experience.position %}<p class="experience-position">{{ experience.position }}</p>{% endif %}
+                                {% if experience.period %}<p class="experience-period">{{ experience.period }}</p>{% endif %}
+                                <p class="experience-description">
+                                    {{ experience.description }}
+                                </p>
+
+                                {% if experience.is_ongoing %}
+                                    <p class="experience-status">Ongoing</p>
+                                {% else %}
+                                    <p class="experience-status">Finished</p>
+                                {% endif %}
+                            </div>
                         </article>
                     {% empty %}
                         <p class="empty-state">
-                            Belum ada pengalaman yang ditambahkan.
+                            No experience added yet.
                         </p>
                     {% endfor %}
                 </div>
