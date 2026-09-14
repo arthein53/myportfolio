@@ -3,7 +3,14 @@ from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
 
-from main.models import Experience
+from main.models import (
+    DiscographyEntry,
+    DiscographyLink,
+    DiscographyRole,
+    Experience,
+    Project,
+    ProjectTag,
+)
 
 
 class MainTest(TestCase):
@@ -13,16 +20,51 @@ class MainTest(TestCase):
             description="Membantu mahasiswa memahami pengembangan web.",
             category="part-time",
         )
+        self.project = Project.objects.create(
+            title="Dynamic Portfolio Project",
+            description="A project managed from Django Admin.",
+            period="2026",
+            organization="Personal",
+            link_label="Open project",
+            link_url="https://example.com/project",
+            order=1,
+        )
+        ProjectTag.objects.create(project=self.project, label="Django", order=1)
+        self.release = DiscographyEntry.objects.create(
+            title="Dynamic Release",
+            description="A release managed from Django Admin.",
+            release_type="Original song",
+            context="Personal Project",
+            audio_filename="Breaking_Horizon_Original_CompositionFull_Orchestration.mp3",
+            order=1,
+        )
+        DiscographyRole.objects.create(entry=self.release, label="Composer", order=1)
+        DiscographyLink.objects.create(
+            entry=self.release,
+            label="Listen",
+            url="https://example.com/release",
+            order=1,
+        )
+
+    def test_content_models_are_registered_in_admin(self):
+        for model in (Project, ProjectTag, DiscographyEntry, DiscographyRole, DiscographyLink):
+            self.assertIn(model, admin.site._registry)
 
     def test_experience_is_registered_in_admin(self):
         self.assertIn(Experience, admin.site._registry)
 
     def test_main_url_is_accessible(self):
-        response = self.client.get(reverse("main:show_main"))
+        with self.assertNumQueries(5):
+            response = self.client.get(reverse("main:show_main"))
 
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "index.html")
         self.assertNotContains(response, self.experience.title)
+        self.assertContains(response, self.project.title)
+        self.assertContains(response, "Django")
+        self.assertContains(response, self.release.title)
+        self.assertContains(response, "Composer")
+        self.assertContains(response, self.release.audio_filename)
         self.assertContains(response, f'href="{reverse("main:show_experience")}"')
 
     def test_nonexistent_page_returns_404(self):
