@@ -110,3 +110,17 @@ class ProductionHardeningTests(TestCase):
         self.assertEqual(production["hsts_seconds"], 31_536_000)
         self.assertTrue(production["hsts_include_subdomains"])
         self.assertEqual(production["secret_key"], env["SECRET_KEY"])
+
+    def test_dockerfile_collects_static_assets_before_starting_gunicorn(self):
+        dockerfile = (Path(settings.BASE_DIR) / "Dockerfile").read_text()
+
+        self.assertIn("python manage.py collectstatic --noinput", dockerfile)
+        self.assertIn("RUN PRODUCTION=False", dockerfile)
+        self.assertNotIn("SECRET_KEY", dockerfile)
+        self.assertIn("gunicorn --bind 0.0.0.0:80", dockerfile)
+
+    def test_dockerignore_excludes_secrets_and_generated_files(self):
+        dockerignore = (Path(settings.BASE_DIR) / ".dockerignore").read_text().splitlines()
+
+        for excluded_path in (".git", "env", "staticfiles", ".env", ".env.*", "db.sqlite3"):
+            self.assertIn(excluded_path, dockerignore)
