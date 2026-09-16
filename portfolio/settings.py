@@ -41,6 +41,9 @@ if not SECRET_KEY:
 # Django must honor the forwarded protocol for secure CSRF origin checks.
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
+# gunakan https:// untuk trailing urlnya
+CSRF_TRUSTED_ORIGINS = ["https://rafael-arlen-myportfolio.pws.cs.ui.ac.id/"]
+
 # Disable detailed error pages when deployed.
 DEBUG = not PRODUCTION
 

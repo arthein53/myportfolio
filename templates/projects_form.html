@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block meta %}
+    <title>Add Project | {{ name }}</title>
+{% endblock meta %}
+{% block content %}
+    <main>
+        <section class="section project-form-section" aria-labelledby="project-form-title">
+            <div class="container">
+                <div class="project-form-intro">
+                    <p class="section-kicker">Project archive</p>
+                    <h1 id="project-form-title">Add New Project</h1>
+                    <p>Save a portfolio project with the same structure used on the homepage.</p>
+                </div>
+                <form method="post" action="{% url 'main:create_project' %}" class="project-form">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <div class="form-group">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+                            {% for error in field.errors %}
+                                <p class="form-error">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                    <div class="project-form-actions">
+                        <button type="submit" class="button">Save project</button>
+                        <a href="{% url 'main:show_main' %}#projects" class="button button-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+{% endblock content %}
