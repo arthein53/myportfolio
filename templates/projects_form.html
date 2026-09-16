@@ -17,14 +17,13 @@
                         <div class="form-group">
                             <label for="{{ field.id_for_label }}">{{ field.label }}</label>
                             {{ field }}
-                            {% for error in field.errors %}
-                                <p class="form-error">{{ error }}</p>
-                            {% endfor %}
+                            {% if field.help_text %}<p class="form-help">{{ field.help_text }}</p>{% endif %}
+                            {% for error in field.errors %}<p class="form-error">{{ error }}</p>{% endfor %}
                         </div>
                     {% endfor %}
                     <div class="project-form-actions">
                         <button type="submit" class="button">Save project</button>
-                        <a href="{% url 'main:show_main' %}#projects" class="button button-secondary">Cancel</a>
+                        <a href="{% url 'main:show_projects' %}" class="button button-secondary">Cancel</a>
                     </div>
                 </form>
             </div>

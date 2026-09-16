@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+<main>
+    <section class="section projects-page" aria-labelledby="projects-title">
+        <div class="container">
+            <div class="projects-page-header">
+                <div>
+                    <p class="section-kicker">Portfolio archive</p>
+                    <h1 id="projects-title">Projects</h1>
+                </div>
+                <a href="{% url 'main:create_project' %}" class="button project-add-button">Add project <span aria-hidden="true">+</span></a>
+            </div>
+            <form class="project-search" method="get" action="{% url 'main:show_projects' %}">
+                <label class="sr-only" for="project-search">Search projects by title</label>
+                <input id="project-search" type="search" name="title" value="{{ title_query }}" placeholder="Search project title">
+                <button class="button" type="submit">Search</button>
+            </form>
+            {% if messages %}{% for message in messages %}<p class="project-message">{{ message }}</p>{% endfor %}{% endif %}
+            <ol class="projects-list projects-page-list">
+                {% for project in project_list %}
+                <li>
+                    <article class="project">
+                        <p class="project-number" aria-hidden="true">{{ forloop.counter|stringformat:"02d" }}</p>
+                        <div class="project-content">
+                            <h2>{{ project.title }}</h2>
+                            <p>{{ project.description }}</p>
+                            <ul class="project-tags" aria-label="Project tags">{% for tag in project.tags %}<li>{{ tag }}</li>{% endfor %}</ul>
+                        </div>
+                        <div class="project-meta">
+                            <p>{{ project.period }}</p><p>{{ project.organization }}</p>
+                            <a href="{{ project.link_url }}" target="_blank" rel="noopener noreferrer">{{ project.link_label }} ↗</a>
+                            {% include "components/project_delete_modal.html" with project=project %}
+                        </div>
+                    </article>
+                </li>
+                {% empty %}
+                <li><p class="empty-state">{% if title_query %}No projects match that title.{% else %}No projects have been added yet.{% endif %}</p></li>
+                {% endfor %}
+            </ol>
+        </div>
+    </section>
+</main>
+{% endblock content %}

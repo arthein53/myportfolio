@@ -1,9 +1,10 @@
 from django.contrib import admin
 from django.core.management import call_command
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.urls import reverse
 from django.utils import timezone
 
+from main.forms import ProjectForm
 from main.models import DiscographyEntry, Experience, Project
 
 
@@ -129,3 +130,48 @@ class MainTest(TestCase):
         self.assertFalse(self.experience.is_ongoing)
         self.assertContains(response, "Finished")
         self.assertNotContains(response, "Ongoing")
+
+    def test_projects_page_deserializes_json_and_filters_by_title(self):
+        response = self.client.get(reverse("main:show_projects"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "project.html")
+        self.assertContains(response, self.project.title)
+        filtered = self.client.get(reverse("main:show_projects"), {"title": "no match"})
+        self.assertContains(filtered, "No projects match that title.")
+
+    def test_project_json_and_delete_endpoint(self):
+        response = self.client.get(reverse("main:get_projects_json"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response["Content-Type"], "application/json")
+        self.assertContains(response, self.project.title)
+        deleted = self.client.post(reverse("main:delete_project", args=[self.project.pk]))
+        self.assertRedirects(deleted, reverse("main:show_projects"))
+        self.assertFalse(Project.objects.filter(pk=self.project.pk).exists())
+
+    @override_settings(PROJECT_WRITE_SECRET="test-write-secret")
+    def test_create_project_requires_the_configured_secret(self):
+        payload = {
+            "title": "Protected Project", "description": "Created through the protected form.",
+            "period": "2026", "organization": "Personal", "link_label": "Open",
+            "link_url": "https://example.com/protected", "tags": '["Django"]', "order": 9,
+        }
+        denied = self.client.post(reverse("main:create_project"), payload)
+        self.assertEqual(denied.status_code, 200)
+        self.assertFalse(Project.objects.filter(title="Protected Project").exists())
+        allowed = self.client.post(reverse("main:create_project"), {**payload, "write_secret": "test-write-secret"})
+        self.assertRedirects(allowed, reverse("main:show_projects"))
+        self.assertTrue(Project.objects.filter(title="Protected Project").exists())
+
+    @override_settings(PROJECT_WRITE_SECRET="test-write-secret")
+    def test_create_project_accepts_the_secret_request_header(self):
+        response = self.client.post(reverse("main:create_project"), {"title": "Header Project", "description": "Protected through a header.", "period": "2026", "organization": "Personal", "link_label": "Open", "link_url": "https://example.com/header", "tags": '[]', "order": 10}, HTTP_X_PROJECT_SECRET="test-write-secret")
+        self.assertRedirects(response, reverse("main:show_projects"))
+        self.assertTrue(Project.objects.filter(title="Header Project").exists())
+
+    def test_project_form_converts_comma_separated_tags_to_a_list(self):
+        form = ProjectForm(data={"title": "Tag Test", "description": "Description", "period": "2026", "organization": "Personal", "link_label": "Open", "link_url": "https://example.com/tag-test", "tags": "Django, Python, Machine Learning", "order": 0, "write_secret": "unused"})
+        self.assertTrue(form.is_valid(), form.errors)
+        self.assertEqual(form.cleaned_data["tags"], ["Django", "Python", "Machine Learning"])
+
