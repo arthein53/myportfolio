@@ -133,7 +133,11 @@
                             <div class="project-meta">
                                 <p>{{ project.period }}</p>
                                 <p>{{ project.organization }}</p>
-                                <a href="{{ project.link_url }}" target="_blank" rel="noopener noreferrer">{{ project.link_label }} ↗</a>
+                                {% if project.links %}
+                                    {% for link in project.links %}<a href="{{ link.url }}" target="_blank" rel="noopener noreferrer">{{ link.label }} ↗</a>{% endfor %}
+                                {% else %}
+                                    <a href="{{ project.link_url }}" target="_blank" rel="noopener noreferrer">{{ project.link_label }} ↗</a>
+                                {% endif %}
                             </div>
                         </article>
                     </li>

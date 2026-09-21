@@ -1,0 +1,35 @@
+
+body {
+  font-family:
+    "Manrope",
+    -apple-system,
+    "Segoe UI",
+    sans-serif;
+  color: var(--ink);
+  background-color: var(--paper);
+  line-height: 1.6;
+  transition:
+    background-color 180ms ease,
+    color 180ms ease;
+}
+
+::selection {
+  color: var(--paper);
+  background-color: var(--accent);
+}
+
+.brand {
+  font-family: inherit;
+}
+
+h1 {
+  font-family: inherit;
+  font-weight: 600;
+  letter-spacing: -0.045em;
+}
+
+.container {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 clamp(1.25rem, 4vw, 3rem);
+}

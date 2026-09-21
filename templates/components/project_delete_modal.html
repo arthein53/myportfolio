@@ -1,0 +1,12 @@
+<button class="button button-danger" type="button" popovertarget="delete-project-{{ project.pk }}">Delete</button>
+<div id="delete-project-{{ project.pk }}" class="project-delete-modal" popover="auto">
+    <div class="project-delete-modal__content">
+        <p class="section-kicker">Delete project</p>
+        <h2>Delete {{ project.title }}?</h2>
+        <p>This cannot be undone.</p>
+        <div class="project-delete-modal__actions">
+            <button class="button button-secondary" type="button" popovertarget="delete-project-{{ project.pk }}" popovertargetaction="hide">Cancel</button>
+            <form method="post" action="{% url 'main:delete_project' project.pk %}">{% csrf_token %}<button class="button button-danger" type="submit">Delete project</button></form>
+        </div>
+    </div>
+</div>

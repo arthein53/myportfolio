@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block meta %}
-    <title>Add Project | {{ name }}</title>
+    <title>{{ page_title }} | {{ name }}</title>
 {% endblock meta %}
 {% block content %}
     <main>
@@ -8,25 +8,35 @@
             <div class="container">
                 <div class="project-form-intro">
                     <p class="section-kicker">Project archive</p>
-                    <h1 id="project-form-title">Add New Project</h1>
+                    <h1 id="project-form-title">{{ page_title }}</h1>
                     <p>Save a portfolio project with the same structure used on the homepage.</p>
                 </div>
-                <form method="post" action="{% url 'main:create_project' %}" class="project-form">
+                <form method="post" class="project-form">
                     {% csrf_token %}
                     {% for field in form %}
                         <div class="form-group">
                             <label for="{{ field.id_for_label }}">{{ field.label }}</label>
                             {{ field }}
-                            {% for error in field.errors %}
-                                <p class="form-error">{{ error }}</p>
-                            {% endfor %}
+                            {% if field.help_text %}<p class="form-help">{{ field.help_text }}</p>{% endif %}
+                            {% for error in field.errors %}<p class="form-error">{{ error }}</p>{% endfor %}
                         </div>
                     {% endfor %}
                     <div class="project-form-actions">
-                        <button type="submit" class="button">Save project</button>
-                        <a href="{% url 'main:show_main' %}#projects" class="button button-secondary">Cancel</a>
+                        <button type="submit" class="button">{{ submit_label }}</button>
+                        <a href="{% url cancel_url %}" class="button button-secondary">Cancel</a>
                     </div>
                 </form>
+                {% if page_title == "Update Project" %}
+                    <details class="delete-confirmation">
+                        <summary class="button button-danger">Delete project</summary>
+                        <form method="post" action="{% url 'main:delete_project' form.instance.pk %}">
+                            {% csrf_token %}<input type="hidden" name="next" value="edit">
+                            <label for="delete-project-password">Password</label>
+                            <input id="delete-project-password" name="password" type="password" required>
+                            <div class="delete-confirmation-actions"><button class="button button-secondary" type="button" onclick="this.closest('details').removeAttribute('open')">Cancel</button><button class="button button-danger" type="submit">Delete</button></div>
+                        </form>
+                    </details>
+                {% endif %}
             </div>
         </section>
     </main>

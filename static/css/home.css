@@ -1,0 +1,635 @@
+/* Section Hero dengan CSS Grid */
+.hero {
+  scroll-margin-top: 6rem;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: 3rem 0 4rem;
+  margin-bottom: 3rem;
+  background-color: var(--hero-background);
+  border-bottom: 1px solid var(--accent);
+}
+
+.hero::before,
+.hero::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  width: max(56rem, 78vw);
+  height: clamp(8rem, 17vw, 13rem);
+  background: var(--geometry-plane);
+  box-shadow: 0 1rem 1.8rem var(--geometry-shadow);
+}
+
+.hero::before {
+  top: 3rem;
+  left: -18rem;
+  transform: rotate(-27deg);
+}
+
+.hero::after {
+  right: -20rem;
+  bottom: 1rem;
+  opacity: 0.82;
+  transform: rotate(27deg);
+}
+
+.hero > .container {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(15rem, 0.55fr);
+  grid-template-areas: "identity photo" "details photo";
+  gap: 1.5rem clamp(2rem, 4vw, 4rem);
+}
+
+.hero-identity h1 span {
+  color: var(--accent);
+}
+
+.hero-statement {
+  width: fit-content;
+  margin-bottom: 2rem;
+  padding: 1rem 1.4rem;
+  border-radius: var(--radius);
+  background: var(--accent);
+  color: var(--paper);
+  font-size: clamp(1.15rem, 2vw, 1.5rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.4;
+}
+
+.hero-identity {
+  grid-area: identity;
+}
+
+.hero-details {
+  grid-area: details;
+  width: 100%;
+  max-width: 540px;
+}
+
+.hero-kicker {
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-dark);
+  font-weight: 600;
+  margin-bottom: 1.25rem;
+}
+
+.hero-identity h1 {
+  font-size: clamp(3rem, 5.5vw, 5rem);
+  font-weight: 600;
+  letter-spacing: -0.065em;
+  line-height: 0.98;
+}
+
+.bio {
+  color: var(--text-muted);
+  max-width: 540px;
+  margin-bottom: 2rem;
+  font-size: 1.02rem;
+}
+
+.meta-list {
+  display: flex;
+  gap: 3rem;
+  margin-bottom: 2rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line);
+}
+
+.meta-row dt {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--text-muted);
+  margin-bottom: 0.15rem;
+}
+
+.meta-row dd {
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.social-links {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.social-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: var(--radius);
+  transition:
+    background-color 180ms ease,
+    transform 180ms ease;
+}
+
+.social-link img,
+.social-link .github-icon {
+  width: 1.75rem;
+  height: 1.75rem;
+  object-fit: contain;
+}
+
+.social-link:hover {
+  background: var(--surface);
+  transform: translateY(-2px);
+}
+
+.social-link:active {
+  transform: translateY(0);
+}
+
+.hero-photo {
+  grid-area: photo;
+  align-self: center;
+  justify-self: end;
+  width: 100%;
+  max-width: 340px;
+  padding: 0.75rem;
+  border: 2px solid var(--accent-dark);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: 8px 8px 0 var(--accent);
+}
+
+.hero-photo > figcaption {
+  padding: 1rem 0.25rem 0.25rem;
+  color: var(--ink);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.avatar {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+}
+
+/* Shared Section */
+.section {
+  scroll-margin-top: 6rem;
+  padding: 1rem 0 7rem;
+  overflow: hidden;
+}
+
+.section-title {
+  max-width: none;
+  color: var(--ink);
+  font-family: inherit;
+  font-size: clamp(2.25rem, 4vw, 3.5rem);
+  font-weight: 600;
+  letter-spacing: -0.045em;
+  line-height: 1.12;
+}
+
+/* Projects */
+.projects-section {
+  padding-top: 5rem;
+  border-top: 1px solid var(--line);
+  background-color: var(--surface);
+}
+
+.projects-list {
+  margin: 2.5rem 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+
+.projects-list > li {
+  position: relative;
+  border-bottom: 1px solid var(--line);
+  background-color: var(--paper);
+  transition: background-color 180ms ease;
+}
+
+.projects-list > li:nth-child(even) {
+  background-color: var(--hero-background);
+}
+
+.projects-list > li::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0.35rem;
+  background-color: var(--accent);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 180ms ease;
+}
+
+.projects-list > li:hover::before,
+.projects-list > li:focus-within::before {
+  transform: scaleY(1);
+}
+
+.project {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr) minmax(10rem, 14rem);
+  gap: 2rem;
+  align-items: start;
+  padding: 2.25rem 1.5rem;
+}
+
+.project-number,
+.project-meta {
+  color: var(--text-muted);
+}
+
+.project-number {
+  display: grid;
+  width: 3rem;
+  height: 3rem;
+  place-items: center;
+  color: var(--paper);
+  background-color: var(--accent);
+  box-shadow: 4px 4px 0 var(--ink);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.project-content > h3 {
+  margin: 0;
+  color: var(--ink);
+  font-family: inherit;
+  font-size: clamp(1.4rem, 2.6vw, 2rem);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 1.3;
+  transition:
+    color 180ms ease,
+    transform 180ms ease;
+}
+
+.projects-list > li:hover .project-content > h3,
+.projects-list > li:focus-within .project-content > h3 {
+  color: var(--accent-dark);
+  transform: translateX(0.35rem);
+}
+
+.project-content > p {
+  max-width: 42rem;
+  margin: 0.9rem 0 0;
+  color: var(--text-muted);
+}
+
+.project-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.project-meta > a {
+  width: fit-content;
+  margin-top: 0.7rem;
+  color: var(--accent-dark);
+  text-underline-offset: 0.25em;
+}
+
+.project-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0 0;
+  padding: 0;
+  color: var(--accent-dark);
+  list-style: none;
+  font-size: 0.78rem;
+}
+
+.project-tags > li {
+  padding: 0.25rem 0.45rem;
+  border: 1px solid var(--line);
+  border-radius: 0.25rem;
+  background-color: var(--surface-raised);
+}
+
+/* Discography Section*/
+.discography-section {
+  padding-top: 5rem;
+  border-top: 1px solid var(--line);
+  background-color: var(--paper);
+}
+
+.discography-section > .container:first-child {
+  text-align: left;
+}
+
+.discography-list {
+  margin: 2.5rem 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+
+.discography-list > li {
+  position: relative;
+  border-bottom: 1px solid var(--line);
+  background-color: var(--paper);
+  transition: background-color 180ms ease;
+}
+
+.discography-list > li:nth-child(even) {
+  background-color: var(--hero-background);
+}
+
+.discography-list > li::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 0 auto;
+  width: 0.35rem;
+  background-color: var(--accent);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 180ms ease;
+}
+
+.discography-list > li:hover::after,
+.discography-list > li:focus-within::after {
+  transform: scaleY(1);
+}
+
+.discography-item {
+  display: grid;
+  grid-template-columns: minmax(10rem, 14rem) minmax(0, 1fr) 3rem;
+  gap: 2rem;
+  align-items: start;
+  padding: 2.25rem 1.5rem;
+  text-align: right;
+  cursor: pointer;
+}
+
+.discography-item:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: -4px;
+}
+
+.discography-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.35rem;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.discography-meta > a {
+  width: fit-content;
+  margin-top: 0.7rem;
+  color: var(--accent-dark);
+  text-underline-offset: 0.25em;
+}
+
+.discography-content > h3 {
+  margin: 0;
+  color: var(--ink);
+  font-family: inherit;
+  font-size: clamp(1.4rem, 2.6vw, 2rem);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 1.3;
+  transition:
+    color 180ms ease,
+    transform 180ms ease;
+}
+
+.discography-list > li:hover .discography-content > h3,
+.discography-list > li:focus-within .discography-content > h3 {
+  color: var(--accent-dark);
+  transform: translateX(-0.35rem);
+}
+
+.discography-content > p {
+  max-width: 42rem;
+  margin: 0.9rem 0 0 auto;
+  color: var(--text-muted);
+}
+
+.discography-content .project-tags {
+  justify-content: flex-end;
+}
+
+.discography-number {
+  display: grid;
+  width: 3rem;
+  height: 3rem;
+  place-items: center;
+  margin: 0;
+  color: var(--paper);
+  background-color: var(--accent);
+  box-shadow: -4px 4px 0 var(--ink);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.discography-list > li:has(.discography-item.is-player-open)::after {
+  transform: scaleY(1);
+}
+
+.discography-player[hidden] {
+  display: none;
+}
+
+.discography-player {
+  display: grid;
+  justify-items: center;
+  padding: 0 1.5rem 2.25rem;
+}
+
+.discography-player audio {
+  width: min(100%, 34rem);
+  height: 2.5rem;
+  accent-color: var(--accent);
+}
+
+/* Skills Loop */
+.skills-section {
+  --skills-gap: 1rem;
+  --skills-card-width: clamp(10rem, calc((100vw - 8rem) / 6), 13rem);
+}
+
+.skills-rows {
+  margin-top: 2.5rem;
+  padding: 0;
+}
+
+.skills-row + .skills-row {
+  margin-top: 0.75rem;
+}
+
+.skills-row {
+  border-block: 1px solid var(--line);
+  background-color: var(--surface);
+}
+
+.skills-row:nth-child(2) {
+  background-color: var(--hero-background);
+}
+
+.skills-window {
+  overflow: hidden;
+  padding: 0.25rem 0;
+}
+
+.skills-window:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: -2px;
+}
+
+.skills-track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
+
+.skills-track-tech {
+  animation: skills-scroll-left 115s linear infinite;
+}
+
+.skills-track-music {
+  animation: skills-scroll-right 125s linear infinite;
+}
+
+.skills-window:hover .skills-track,
+.skills-window:focus .skills-track,
+.skills-window:focus-within .skills-track {
+  animation-play-state: paused;
+}
+
+.skills-set {
+  display: flex;
+  flex: 0 0 auto;
+  gap: var(--skills-gap);
+  margin: 0;
+  padding: 0 calc(var(--skills-gap) / 2);
+  list-style: none;
+}
+
+.skills-card {
+  display: grid;
+  width: var(--skills-card-width);
+  aspect-ratio: 1.35;
+  flex: 0 0 auto;
+  align-content: center;
+  justify-items: center;
+  gap: 0.8rem;
+  margin: 0.5rem 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: var(--ink);
+  background-color: var(--paper);
+  box-shadow: 4px 4px 0 var(--accent);
+  font-size: 0.76rem;
+  font-weight: 500;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.skills-card:hover {
+  color: var(--accent-dark);
+  transform: translateY(-3px);
+  box-shadow: 4px 7px 0 var(--accent);
+}
+
+.skills-card img {
+  --icon-scale: 1;
+  display: block;
+  width: 3.5rem;
+  height: 3.5rem;
+  object-fit: contain;
+  transform: scale(var(--icon-scale));
+  transition: transform 180ms ease;
+}
+
+.skills-card img[src$="css3.png"] {
+  /* menyesuaikan ukuran agar sama dengan icon html5 karena sourcenya berbeda ukuran */
+  --icon-scale: 1.26;
+}
+
+.github-icon {
+  /* icon github memiliki konfigurasi khusus agar bisa menyesuaikan light/dark theme */
+  position: relative;
+  display: block;
+  width: 3.5rem;
+  height: 3.5rem;
+}
+
+.github-icon img {
+  position: absolute;
+  inset: 0;
+}
+
+.github-icon-light {
+  display: none !important;
+}
+
+.github-icon-dark {
+  --icon-scale: 1.01;
+}
+
+:root[data-theme="light"] .github-icon-light {
+  display: block !important;
+}
+
+:root[data-theme="light"] .github-icon-dark {
+  display: none !important;
+}
+
+.skills-card:hover img {
+  transform: scale(calc(var(--icon-scale) * 1.06));
+}
+
+@keyframes skills-scroll-left {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes skills-scroll-right {
+  from {
+    transform: translateX(-50%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+.section-kicker {
+  margin-bottom: 0.75rem;
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* @media (prefers-reduced-motion: reduce) {
+    .social-link, .theme-toggle, .skills-card, .skills-card img {
+        transition: none;
+    }
+    .skills-track { animation: none; }
+    .skills-window { overflow-x: auto; }
+    .skills-set[aria-hidden="true"] { display: none; }
+} */

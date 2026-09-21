@@ -32,9 +32,9 @@
             </button>
             <nav id="primary-nav" aria-label="Primary navigation">
                 <a href="{% url 'main:show_main' %}">Profile</a>
-                <a href="#skills">Skills</a>
-                <a href="#projects">Projects</a>
-                <a href="#discography">Discography</a>
+                <a href="{% url 'main:show_main' %}#skills">Skills</a>
+                <a href="{% url 'main:show_main' %}#projects">Projects</a>
+                <a href="{% url 'main:show_main' %}#discography">Discography</a>
                 <a href="{% url 'main:show_experience' %}">Experience</a>
                 <button class="theme-toggle" type="button" aria-label="Switch color theme" aria-pressed="false">    <!-- tombol toggle light/dark theme, penerapan aria direkomendasikan AI -->
                     <span class="theme-toggle-mark" aria-hidden="true"></span>

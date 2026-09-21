@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block meta %}
+    <title>{{ page_title|title }} | {{ name }}</title>
+{% endblock meta %}
+{% block content %}
+<main>
+    <section class="section project-form-section" aria-labelledby="experience-form-title">
+        <div class="container">
+            <div class="project-form-intro">
+                <p class="section-kicker">Experience archive</p>
+                <h1 id="experience-form-title">{{ page_title }}</h1>
+                <p>Save a role, organization, timeframe, and description for the portfolio experience archive.</p>
+            </div>
+            <form method="post" class="project-form">
+                {% csrf_token %}
+                {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+                {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.help_text %}<p class="form-help">{{ field.help_text }}</p>{% endif %}
+                        {% for error in field.errors %}<p class="form-error">{{ error }}</p>{% endfor %}
+                    </div>
+                {% endfor %}
+                <div class="project-form-actions">
+                    <button type="submit" class="button">{{ submit_label }}</button>
+                    <a href="{% url 'main:show_experience' %}" class="button button-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </section>
+</main>
+{% endblock content %}

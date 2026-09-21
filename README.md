@@ -43,3 +43,18 @@ Detail section yang dibantu AI:
 2. Refactor Project dan Discography ke MVT dipandu AI.
 
 
+### Tugas 3
+## JAWABAN PERTANYAAN REFLEKTIF
+1. ModelForm kita gunakan agar form mengikuti model Django dengan konsisten. Field, validasi tipe data, batas panjang, pilihan kategori, dan pesan error menjadi bisa dikelola dari satu tempat, lalu instance model dapat disimpan dengan form.save(). Kalau form HTML dibuat manual, validasi dan pemetaan setiap input ke model harus ditulis ulang di view sehingga lebih tidak konsisten. Tag {% csrf_token %} membuat token yang divalidasi Django saat POST. Token ini membantu mencegah CSRF, yaitu ketika situs lain mencoba mengirim request perubahan data menggunakan sesi user yang sedang aktif.
+
+2. JSON lebih disukai pada pengembangan web modern karena formatnya ringkas, mudah dibaca, dan punya pemetaan langsung ke object dan array JavaScript. Browser dapat memproses JSON secara native dengan JSON.parse(). XML biasanya butuh parsing yang lebih rumit. JSON juga cocok untuk API karena payload-nya lebih kecil dan strukturnya nyaman digunakan oleh frontend maupun backend.
+
+3. Saat endpoint JSON portfolio diakses, URL di main/urls.py meneruskan request ke view get_experiences_json(). View mengambil queryset Experience dari database, lalu serializers.serialize("json", ...) mengubah setiap instance model menjadi data JSON yang dapat dikirim dalam HttpResponse dengan content type application/json. Halaman experience memanggil endpoint view tersebut, membaca content JSON, lalu serializers.deserialize() mereturn menjadi instance Experience sebelum data dirender template. Serialization diperlukan karena object model Django berisi tipe Python dan metadata internal yang tidak dapat dikirim langsung sebagai respons HTTP JSON.
+
+## AI DISCLOSURE
+Dalam pengerjaan Tugas 3 saya menggunakan GPT-5.6-terra untuk membantu meninjau requirement, merancang test Django terlebih dahulu, dan mengajarkan pengimplementasian CRUD Experience serta endpoint JSON. Saya memeriksa struktur model, URL, view, dan template yang sudah ada sebelum perubahan dilakukan.
+
+Detail section yang dibantu AI:
+1. Penambahan ExperienceForm dan validasi write code.
+2. View, URL, template create/update, tombol delete, serta endpoint JSON untuk Experience.
+3. Test Django untuk create, update, delete, JSON, dan deserialisasi Experience.

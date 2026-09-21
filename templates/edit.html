@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block meta %}
+    <title>Edit Portfolio | {{ name }}</title>
+{% endblock meta %}
+{% block content %}
+<main class="edit-page">
+    <section class="section edit-page-intro">
+        <div class="container">
+            <p class="section-kicker">Portfolio control room</p>
+            <h1>Edit portfolio</h1>
+            <p>Update or remove published projects, experiences, and discography entries.</p>
+            {% if messages %}{% for message in messages %}<p class="project-message">{{ message }}</p>{% endfor %}{% endif %}
+        </div>
+    </section>
+
+    <section class="section projects-section" aria-labelledby="edit-projects-title">
+        <div class="container"><h2 class="section-title" id="edit-projects-title">Projects</h2></div>
+        <div class="container"><ol class="projects-list">
+            {% for project in projects %}<li><article class="project">
+                <p class="project-number" aria-hidden="true">{{ forloop.counter|stringformat:"02d" }}</p>
+                <div class="project-content"><h3>{{ project.title }}</h3><p>{{ project.description }}</p><ul class="project-tags">{% for tag in project.tags %}<li>{{ tag }}</li>{% endfor %}</ul></div>
+                <div class="project-meta"><p>{{ project.period }}</p><p>{{ project.organization }}</p><a class="button button-secondary" href="{% url 'main:update_project' project.pk %}">Edit</a><details class="delete-confirmation"><summary class="button button-danger">Delete</summary><form method="post" action="{% url 'main:delete_project' project.pk %}">{% csrf_token %}<input type="hidden" name="next" value="edit"><label>Password <input name="password" type="password" required></label><div class="delete-confirmation-actions"><button class="button button-secondary" type="button" onclick="this.closest('details').removeAttribute('open')">Cancel</button><button class="button button-danger" type="submit">Delete</button></div></form></details></div>
+            </article></li>{% empty %}<li><p class="empty-state">No projects have been added yet.</p></li>{% endfor %}
+        </ol></div>
+    </section>
+
+    <section class="experience-section" aria-labelledby="edit-experience-title">
+        <div class="container"><h2 id="edit-experience-title">Experience</h2><div class="experience-grid">
+            {% for experience in experience_list %}<article class="experience-card">
+                {% if experience.thumbnail %}<img class="experience-thumbnail" src="{{ experience.thumbnail }}" alt="Thumbnail for {{ experience.title }}" loading="lazy">{% else %}<div class="experience-thumbnail experience-thumbnail-placeholder" aria-hidden="true"><span>Experience</span></div>{% endif %}
+                <div class="experience-card-content"><span class="experience-category">{{ experience.get_category_display }}</span><h3>{{ experience.organization|default:experience.title }}</h3>{% if experience.position %}<p class="experience-position">{{ experience.position }}</p>{% endif %}{% if experience.period %}<p class="experience-period">{{ experience.period }}</p>{% endif %}<p class="experience-description">{{ experience.description }}</p><div class="edit-actions"><a class="button button-secondary" href="{% url 'main:update_experience' experience.pk %}?next=edit">Edit</a><details class="delete-confirmation"><summary class="button button-danger">Delete</summary><form method="post" action="{% url 'main:delete_experience' experience.pk %}">{% csrf_token %}<input type="hidden" name="next" value="edit"><label>Password <input name="password" type="password" required></label><div class="delete-confirmation-actions"><button class="button button-secondary" type="button" onclick="this.closest('details').removeAttribute('open')">Cancel</button><button class="button button-danger" type="submit">Delete</button></div></form></details></div></div>
+            </article>{% empty %}<p class="empty-state">No experience added yet.</p>{% endfor %}
+        </div></div>
+    </section>
+
+    <section class="section discography-section" aria-labelledby="edit-discography-title">
+        <div class="container"><h2 class="section-title" id="edit-discography-title">Discography</h2></div>
+        <div class="container"><ol class="discography-list">
+            {% for entry in discography_entries %}<li><article class="discography-item">
+                <div class="discography-meta"><p>{{ entry.release_type }}</p><p>{{ entry.context }}</p><a class="button button-secondary" href="{% url 'main:update_discography' entry.pk %}">Edit</a><details class="delete-confirmation"><summary class="button button-danger">Delete</summary><form method="post" action="{% url 'main:delete_discography' entry.pk %}">{% csrf_token %}<label>Password <input name="password" type="password" required></label><div class="delete-confirmation-actions"><button class="button button-secondary" type="button" onclick="this.closest('details').removeAttribute('open')">Cancel</button><button class="button button-danger" type="submit">Delete</button></div></form></details></div>
+                <div class="discography-content"><h3>{{ entry.title }}</h3><p>{{ entry.description }}</p><ul class="project-tags">{% for role in entry.roles %}<li>{{ role }}</li>{% endfor %}</ul></div><p class="discography-number" aria-hidden="true">{{ forloop.counter|stringformat:"02d" }}</p>
+            </article></li>{% empty %}<li><p class="empty-state">No releases have been added yet.</p></li>{% endfor %}
+        </ol></div>
+    </section>
+</main>
+{% endblock content %}

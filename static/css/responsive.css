@@ -1,0 +1,227 @@
+/* Footer & Responsive */
+.site-footer {
+  padding: 2rem 1.5rem;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  border-top: 1px solid var(--line);
+  background-color: var(--paper);
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease;
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 4px;
+}
+
+@media (max-width: 900px) {
+  .experience-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .site-header .container {
+    position: relative;
+    align-items: center;
+    padding-block: 0.5rem;
+  }
+
+  .brand {
+    padding-top: 0;
+  }
+
+  .menu-toggle {
+    display: grid;
+    margin-left: auto;
+  }
+
+  .site-header nav {
+    position: absolute;
+    top: calc(100% + 1px);
+    right: 0;
+    display: none;
+    width: min(19rem, calc(100vw - 2.5rem));
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.25rem;
+    padding: 0.75rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background-color: var(--paper);
+    box-shadow: 6px 6px 0 var(--accent);
+  }
+
+  .site-header nav.is-open {
+    display: flex;
+  }
+
+  .site-header nav a {
+    width: 100%;
+    min-height: 2.75rem;
+    padding: 0.6rem 0.75rem;
+  }
+
+  .theme-toggle {
+    align-self: flex-start;
+  }
+
+  .hero,
+  .section {
+    scroll-margin-top: 6rem;
+  }
+
+  .hero {
+    padding: 2rem 0 3rem;
+  }
+
+  .hero-grid {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "identity"
+      "details"
+      "photo";
+  }
+
+  .hero-photo {
+    max-width: 230px;
+  }
+
+  .hero-identity h1 {
+    font-size: clamp(2.75rem, 10.7vw, 4rem);
+  }
+
+  .meta-list {
+    gap: 2rem;
+  }
+
+  .social-links {
+    justify-content: flex-start;
+  }
+
+  .section {
+    padding-bottom: 5rem;
+  }
+
+  .project {
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+    padding: 1.5rem 1rem;
+  }
+
+  .project-meta {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+  }
+
+  .project-meta > a {
+    flex-basis: 100%;
+    margin-top: 0.25rem;
+  }
+
+  .discography-item {
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+    padding: 1.5rem 1rem;
+  }
+
+  .discography-meta {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.5rem 1rem;
+  }
+
+  .discography-meta > a {
+    flex-basis: 100%;
+    margin-top: 0.25rem;
+  }
+
+  .skills-section {
+    --skills-gap: 0.75rem;
+    --skills-card-width: 9rem;
+  }
+
+  .section-title {
+    font-size: clamp(2rem, 8vw, 2.75rem);
+  }
+
+  .experience-section {
+    min-height: calc(100vh - 8rem);
+    padding: 4rem 0 5rem;
+  }
+
+  .experience-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .experience-card-content {
+    padding: 1rem;
+  }
+
+  .experience-status {
+    padding-top: 1.25rem;
+  }
+
+  .project-form {
+    width: 100%;
+    max-width: 100%;
+    margin-top: 1.5rem;
+  }
+
+  .form-group {
+    margin-bottom: 1.25rem;
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-weight: 700;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.7rem;
+    border: 1px solid var(--accent);
+    border-radius: var(--radius);
+    font: inherit;
+    transition:
+      border-color 0.2s ease,
+      outline-color 0.2s ease;
+  }
+
+  .form-group input:focus,
+  .form-group textarea:focus {
+    outline: 2px solid var(--accent);
+    border-color: var(--accent);
+  }
+
+  .form-error {
+    color: #b42318;
+    font-size: 0.85rem;
+    margin-top: 0.35rem;
+  }
+
+  .button {
+    display: inline-block;
+    height: fit-content;
+    border: 0;
+    border-radius: var(--radius);
+    padding: 0.65rem 1rem;
+    background: var(--accent);
+    color: white;
+    cursor: pointer;
+    font: inherit;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .button-secondary {
+    background: var(--ink);
+  }
+}

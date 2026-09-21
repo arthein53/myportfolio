@@ -23,7 +23,7 @@ class Experience(models.Model):
     period = models.CharField(max_length=100, blank=True)
     description = models.TextField()
     category = models.CharField(max_length=20, choices=EXPERIENCE_CHOICES, default="full-time")
-    thumbnail = models.URLField(blank=True, null=True)
+    thumbnail = models.CharField(max_length=500, blank=True, default="")
     started_at = models.DateTimeField(auto_now_add=True)
     ended_at = models.DateTimeField(blank=True, null=True)
 
@@ -42,6 +42,11 @@ class Project(models.Model):
     organization = models.CharField(max_length=255)
     link_label = models.CharField(max_length=100)
     link_url = models.URLField()
+    links = models.JSONField(
+        default=list,
+        blank=True,
+        help_text='Example: [{"label": "Open project", "url": "https://example.com"}]',
+    )
     tags = models.JSONField(default=list, blank=True, help_text='Example: ["Django", "Python"]')
     order = models.PositiveSmallIntegerField(default=0, db_index=True)
 
