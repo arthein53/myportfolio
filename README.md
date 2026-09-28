@@ -5,15 +5,35 @@ NPM : 2506613514
 Kelas : PBP B
 
 
-### TUGAS 1
-## JAWABAN PERTANYAAN REFLEKTIF
-1. Ya, saya menggunakan elemen semantik HTML5 seperti <section>, <article>, <header>, <nav>, dan <footer>. Elemen <section> saya gunakan untuk memisahkan bagian utama portofolio seperti About Me, Projects, Skills, dan Contact. Untuk setiap project, saya menggunakan <article> karena setiap project merupakan konten yang berdiri sendiri dan punya judul, deskripsi, tech stack yang digunakan, serta link bukti project. Elemen-elemen tersebut sangat membantu terutama dalam membuat kode saya readable dan clean.
+## Dokumentasi Website
+### Deskripsi
+Website portofolio pribadi menggunakan Django yang menampilkan perjalanan saya di bidang computer science, AI/ML, dan musik.
+
+### Isi Website
+- **Profil dan skills:** Identitas, program studi, bio singkat, social link, serta daftar tools teknologi dan musik yang saya kuasai.
+- **Projects:** Kumpulan proyek beserta deskripsi, periode, organisasi, teknologi, dan link terkait. Guest dapat mencari proyek berdasarkan judul.
+- **Experience:** Pengalaman kerja, organisasi, atau kegiatan yang pernah/sedang saya jalani.
+- **Discography:** Musik dan lagu yang saya produksi atau aransemen.
+
+### Yang Dapat Dilakukan Pengguna
+- Semua pengunjung dapat mengakses konten, mengganti light/dark theme, dan memutar audio pada discography.
+
+### Role Pengguna
+- **Guest:** belum login. Hanya dapat membaca konten portofolio; tindakan yang memerlukan akun akan diarahkan ke halaman login.
+- **User:** pengguna yang sudah login. Dapat memberi atau membatalkan star pada Project, Experience, dan Discography, tetapi tidak dapat mengubah data portofolio.
+- **Editor:** memiliki hak User dan dapat memperbarui data portofolio yang sudah ada melalui halaman `/edit/`. Editor tidak dapat membuat atau menghapus data.
+- **Superuser:** memiliki seluruh hak Editor serta dapat membuat, memperbarui, dan menghapus data portofolio. Superuser juga dapat mengatur akun dan role melalui Django Admin.
+
+
+## TUGAS 1
+### JAWABAN PERTANYAAN REFLEKTIF
+1. Ya, saya menggunakan elemen semantik HTML5 seperti `<section>`, `<article>`, `<header>`, `<nav>`, dan `<footer>`. Elemen `<section>` saya gunakan untuk memisahkan bagian utama portofolio seperti About Me, Projects, Skills, dan Contact. Untuk setiap project, saya menggunakan `<article>` karena setiap project merupakan konten yang berdiri sendiri dan punya judul, deskripsi, tech stack yang digunakan, serta link bukti project. Elemen-elemen tersebut sangat membantu terutama dalam membuat kode saya readable dan clean.
 
 2. Bagi saya, tantangan utama saat membuat tampilan responsif adalah mengatur perubahan layout dari desktop ke mobile. Di desktop, beberapa elemen dapat ditampilkan secara horizontal seperti navigasi, foto profil dan deskripsi, atau daftar project dalam beberapa kolom. Namun, di mobile elemen-elemen tersebut harus ditumpuk vertikal agar tetap mudah dibaca dan tidak menyebabkan horizontal scrolling. Saya mengevaluasi prioritas berdasarkan fungsi dan keterbacaan informasi. Konten utama seperti identitas, deskripsi, dan project harus terlihat jelas. Elemen yang bersifat pelengkap seperti dekorasi atau teks yang terlalu panjang, dapat dikecilkan, dipindahkan, atau dibuat lebih sederhana. Saya menggunakan media query untuk mengubah jumlah kolom pada grid, ukuran font, jarak antar elemen, dll agar cocok untuk layar kecil.
 
-3. Yang saya rasakan, batasan utama static web ini adalah semua konten harus diupdate secara manual di file HTML. Kalau ingin menambahkan data project baru atau update experience dan skill, saya harus mengubah kode lalu melakukan deploy ulang. Static web juga belum dapat menyediakan banyak fitur seperti formulir kontak yang bisa kirim pesan direct ke email, fitur search proyek, dll. Pada step selanjutnya, saya ingin menambahkan formulir kontak yang terhubung ke backend atau layanan email agar guest bisa mengirim pesan langsung dari website. Saya juga ingin menyiapkan data proyek dalam format terpisah, misal mungkin JSON atau database, sehingga daftar proyek bisa ditampilkan secara dinamis dan lebih mudah di-update. 
+3. Yang saya rasakan, batasan utama static web ini adalah semua konten harus diupdate secara manual di file HTML. Kalau ingin menambahkan data project baru atau update experience dan skill, saya harus mengubah kode lalu melakukan deploy ulang. Static web juga belum dapat menyediakan banyak fitur seperti formulir kontak yang bisa kirim pesan direct ke email, fitur search proyek, dll. Pada step selanjutnya, saya ingin menambahkan formulir kontak yang terhubung ke backend atau layanan email agar guest bisa mengirim pesan langsung dari website. Saya juga ingin menyiapkan data proyek dalam format terpisah, misal mungkin JSON atau database, sehingga daftar proyek bisa ditampilkan secara dinamis dan lebih mudah di-update.
 
-## AI DISCLOSURE
+### AI DISCLOSURE
 Dalam pengerjaan Tugas 1 saya menggunakan bantuan dari GPT-5.6-terra terutama dalam elemen-elemen JavaScript untuk keperluan button dan audio player. Dalam penggunaan AI sendiri, saya menggunakan prompting dengan pendekatan "teach and explain to me ..." dibandingkan secara langsung meminta AI mengerjakan kodenya. Hal ini saya lakukan agar dapat benar-benar memahami apa yang menyusun website portfolio saya, serta secara tidak langsung juga menghemat token karena saya lalu bisa dengan mudah meng-customize sendiri sesuai yang saya inginkan (tidak ketergantungan).
 
 AI juga membantu saya dalam pemilihan color palette, berhubung saya kurang berpengalaman dalam bidang design, jadi saya mendiskusikannya dengan AI terlebih dahulu. Selain itu, AI juga menyarankan dan mencontohkan penggunaan atribut aria dalam beberapa elemen. Atribut ini sendiri disarankan oleh AI dengan fungsi yang mendukung kejelasan text to speech. Atribut ini saya pakai di awal pengerjaan namun tidak terlalu di commit-commit terakhir karena efisiensi waktu.
@@ -27,15 +47,15 @@ Detail section yang dibantu AI:
 4. Pemilihan Color Palette
 
 
-### TUGAS 2
-## JAWABAN PERTANYAAN REFLEKTIF
+## TUGAS 2
+### JAWABAN PERTANYAAN REFLEKTIF
 1. Saat user buka homepage, yaitu http://localhost:8000/ (local) atau https://rafael-arlen-myportfolio.pws.cs.ui.ac.id/ (production), browser mengirim HTTP request ke server Django. Request akan masuk ke portfolio/urls.py sebagai file routing utama project. path('', include('main.urls')) membuat request diteruskan ke main/urls.py karena URL yang dibuka adalah /. Di main/urls.py, path "" diarahkan ke view show_main. Lalu, Django akan run fungsi show_main() pada main/views.py. View berfungsi menyiapkan data yang dibutuhkan homepage. Data name, npm, study_program, bio, dll dimasukkan langsung ke context. Data yang sudah disiapkan view lalu akan dikirim ke templates/index.html. Setelah index.html selesai dirender dengan data dari context, Django akan mengirim HTML ke browser. Browser lalu load CSS dari static file, gambar, JavaScript untuk menu, audio player, dll. Terakhir, user dapat melihat homepage portofolio yang berisi profil, skills, project, dan discography.
 
 2. Data untuk section portfolio, seperti Project, DiscographyEntry, dan Experience lebih baik disimpan di model daripada ditulis langsung di template karena model dapat mengelola data secara terstruktur di database. Jika data ditulis langsung di template, setiap kali saya ingin menambahkan pengalaman baru atau update deskripsi project, saya harus mengubah isi HTML secara manual. Cara tersebut tidak efisien dan berpotensi menghasilkan duplikasi kode, terutama karena setiap kartu experience atau project punya struktur HTML yang mirip. Selain itu dengan model, saya bisa menambahkan atau update data lewat Django Admin page tanpa harus mengedit template.
 
 3. Makemigrations digunakan untuk mendeteksi update pada model dan membuat file migration baru. File migration berisi instruksi perubahan struktur database, tapi perintah ini tidak mengubah database secara langsung. Migrate digunakan untuk menjalankan migration yang sudah dibuat ke database. Setelah perintah ini dijalankan, struktur tabel pada database akan dibuat atau diupdate.
 
-## AI DISCLOSURE
+### AI DISCLOSURE
 Dalam pengerjaan Tugas 2, saya menggunakan GPT-5.6-terra terutama dalam proses debugging, proses-proses repetitif, dan minta penjelasan tentang konsep dan cara kerja MVT.
 
 Detail section yang dibantu AI:
@@ -43,18 +63,29 @@ Detail section yang dibantu AI:
 2. Refactor Project dan Discography ke MVT dipandu AI.
 
 
-### Tugas 3
-## JAWABAN PERTANYAAN REFLEKTIF
+## Tugas 3
+### JAWABAN PERTANYAAN REFLEKTIF
 1. ModelForm kita gunakan agar form mengikuti model Django dengan konsisten. Field, validasi tipe data, batas panjang, pilihan kategori, dan pesan error menjadi bisa dikelola dari satu tempat, lalu instance model dapat disimpan dengan form.save(). Kalau form HTML dibuat manual, validasi dan pemetaan setiap input ke model harus ditulis ulang di view sehingga lebih tidak konsisten. Tag {% csrf_token %} membuat token yang divalidasi Django saat POST. Token ini membantu mencegah CSRF, yaitu ketika situs lain mencoba mengirim request perubahan data menggunakan sesi user yang sedang aktif.
 
 2. JSON lebih disukai pada pengembangan web modern karena formatnya ringkas, mudah dibaca, dan punya pemetaan langsung ke object dan array JavaScript. Browser dapat memproses JSON secara native dengan JSON.parse(). XML biasanya butuh parsing yang lebih rumit. JSON juga cocok untuk API karena payload-nya lebih kecil dan strukturnya nyaman digunakan oleh frontend maupun backend.
 
 3. Saat endpoint JSON portfolio diakses, URL di main/urls.py meneruskan request ke view get_experiences_json(). View mengambil queryset Experience dari database, lalu serializers.serialize("json", ...) mengubah setiap instance model menjadi data JSON yang dapat dikirim dalam HttpResponse dengan content type application/json. Halaman experience memanggil endpoint view tersebut, membaca content JSON, lalu serializers.deserialize() mereturn menjadi instance Experience sebelum data dirender template. Serialization diperlukan karena object model Django berisi tipe Python dan metadata internal yang tidak dapat dikirim langsung sebagai respons HTTP JSON.
 
-## AI DISCLOSURE
+### AI DISCLOSURE
 Dalam pengerjaan Tugas 3 saya menggunakan GPT-5.6-terra untuk membantu meninjau requirement, merancang test Django terlebih dahulu, dan mengajarkan pengimplementasian CRUD Experience serta endpoint JSON. Saya memeriksa struktur model, URL, view, dan template yang sudah ada sebelum perubahan dilakukan.
 
 Detail section yang dibantu AI:
 1. Penambahan ExperienceForm dan validasi write code.
 2. View, URL, template create/update, tombol delete, serta endpoint JSON untuk Experience.
 3. Test Django untuk create, update, delete, JSON, dan deserialisasi Experience.
+
+## TUGAS 4
+
+### AI DISCLOSURE
+Dalam pengerjaan Tugas 4 saya menggunakan GPT-5.6-terra untuk membantu memahami requirement autentikasi dan otorisasi, melakukan debugging, serta mengajarkan penerapan role pada Django. Saya tetap mereview dan menulis sendiri perubahan pada model, view, URL, template, dan test sebelum fitur dicommit.
+
+Detail section yang dibantu AI:
+1. Implementasi register, login, logout, dan pembatasan akses User, Editor, serta Superuser.
+2. Penambahan fitur star pada Project, Experience, dan Discography menggunakan relasi ManyToManyField.
+3. Pembuatan migration, view toggle star, template button star, dan perbaikan agar star dapat diperbarui tanpa reload halaman.
+4. Penambahan dan pengecekan test untuk role, authorization, star, serta respons JSON asynchronous.
