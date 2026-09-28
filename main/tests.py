@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib.auth.models import User
 from django.core.management import call_command
 from django.test import TestCase, override_settings
 from django.urls import reverse
@@ -10,6 +11,12 @@ from main.models import DiscographyEntry, Experience, Project
 
 class MainTest(TestCase):
     def setUp(self):
+        self.user = User.objects.create_user(username="member", password="member-password")
+        self.admin_user = User.objects.create_superuser(
+            username="owner",
+            password="owner-password",
+            email="owner@example.com",
+        )
         self.experience = Experience.objects.create(
             title="Asisten Dosen PBP",
             description="Membantu mahasiswa memahami pengembangan web.",
@@ -188,6 +195,7 @@ class MainTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response["Content-Type"], "application/json")
         self.assertContains(response, self.project.title)
+        self.client.force_login(self.admin_user)
         deleted = self.client.post(reverse("main:delete_project", args=[self.project.pk]), {"password": "test-write-secret"})
         self.assertRedirects(deleted, reverse("main:show_projects"))
         self.assertFalse(Project.objects.filter(pk=self.project.pk).exists())
@@ -199,6 +207,7 @@ class MainTest(TestCase):
             "period": "2026", "organization": "Personal", "link_label": "Open",
             "link_url": "https://example.com/protected", "tags": '["Django"]', "order": 9,
         }
+        self.client.force_login(self.admin_user)
         denied = self.client.post(reverse("main:create_project"), payload)
         self.assertEqual(denied.status_code, 200)
         self.assertFalse(Project.objects.filter(title="Protected Project").exists())
@@ -208,6 +217,7 @@ class MainTest(TestCase):
 
     @override_settings(PROJECT_WRITE_SECRET="test-write-secret")
     def test_create_project_accepts_the_secret_request_header(self):
+        self.client.force_login(self.admin_user)
         response = self.client.post(reverse("main:create_project"), {"title": "Header Project", "description": "Protected through a header.", "period": "2026", "organization": "Personal", "link_label": "Open", "link_url": "https://example.com/header", "tags": '[]', "order": 10}, HTTP_X_PROJECT_SECRET="test-write-secret")
         self.assertRedirects(response, reverse("main:show_projects"))
         self.assertTrue(Project.objects.filter(title="Header Project").exists())
@@ -229,6 +239,7 @@ class MainTest(TestCase):
             "thumbnail": "https://example.com/portfolio.jpg",
         }
 
+        self.client.force_login(self.admin_user)
         denied = self.client.post(reverse("main:create_experience"), payload)
         self.assertEqual(denied.status_code, 200)
         self.assertFalse(Experience.objects.filter(title="Portfolio Maintainer").exists())
@@ -242,6 +253,7 @@ class MainTest(TestCase):
 
     @override_settings(PROJECT_WRITE_SECRET="test-write-secret")
     def test_update_experience_with_model_form_updates_all_editable_fields(self):
+        self.client.force_login(self.admin_user)
         response = self.client.post(
             reverse("main:update_experience", args=[self.experience.pk]),
             {
@@ -274,6 +286,7 @@ class MainTest(TestCase):
         self.assertContains(page_response, self.experience.title)
         self.assertNotContains(page_response, reverse("main:update_experience", args=[self.experience.pk]))
 
+        self.client.force_login(self.admin_user)
         update_page = self.client.get(reverse("main:update_experience", args=[self.experience.pk]))
         self.assertEqual(update_page.status_code, 200)
         self.assertTemplateUsed(update_page, "experience_form.html")
@@ -283,6 +296,7 @@ class MainTest(TestCase):
         self.assertFalse(Experience.objects.filter(pk=self.experience.pk).exists())
 
     def test_edit_page_lists_projects_experiences_and_discography_with_controls(self):
+        self.client.force_login(self.admin_user)
         response = self.client.get(reverse("main:show_edit"))
 
         self.assertEqual(response.status_code, 200)
@@ -299,6 +313,7 @@ class MainTest(TestCase):
 
     @override_settings(PROJECT_WRITE_SECRET="test-write-secret")
     def test_edit_forms_update_project_and_discography_data(self):
+        self.client.force_login(self.admin_user)
         project_response = self.client.post(
             reverse("main:update_project", args=[self.project.pk]),
             {
@@ -339,3 +354,74 @@ class MainTest(TestCase):
         deleted = self.client.post(reverse("main:delete_discography", args=[self.release.pk]), {"password": "test-write-secret"})
         self.assertRedirects(deleted, reverse("main:show_edit"))
         self.assertFalse(DiscographyEntry.objects.filter(pk=self.release.pk).exists())
+
+    def test_register_login_and_logout_manage_authentication_and_last_login_cookie(self):
+        registration = self.client.post(
+            reverse("main:register"),
+            {"username": "new-member", "password1": "safe-password-123", "password2": "safe-password-123"},
+        )
+        self.assertRedirects(registration, reverse("main:login"))
+        self.assertTrue(User.objects.filter(username="new-member").exists())
+
+        login_response = self.client.post(
+            reverse("main:login"),
+            {"username": "new-member", "password": "safe-password-123"},
+        )
+        self.assertRedirects(login_response, reverse("main:show_main"))
+        self.assertIn("last_login", login_response.cookies)
+
+        home = self.client.get(reverse("main:show_main"))
+        self.assertContains(home, "Sesi Terakhir Login")
+        self.assertContains(home, "new-member")
+
+        logout_response = self.client.get(reverse("main:logout"))
+        self.assertRedirects(logout_response, reverse("main:show_main"))
+        self.assertEqual(logout_response.cookies["last_login"].value, "")
+
+    @override_settings(PROJECT_WRITE_SECRET="test-write-secret")
+    def test_only_superusers_can_change_projects(self):
+        payload = {
+            "title": "Protected Project",
+            "description": "Only the owner may create this.",
+            "period": "2026",
+            "organization": "Personal",
+            "link_label": "Open",
+            "link_url": "https://example.com/protected",
+            "tags": "Django",
+            "order": 2,
+            "write_secret": "test-write-secret",
+        }
+
+        anonymous = self.client.post(reverse("main:create_project"), payload)
+        self.assertRedirects(anonymous, f"{reverse('main:login')}?next=%2Fprojects%2Fadd%2F")
+
+        self.client.force_login(self.user)
+        member = self.client.post(reverse("main:create_project"), payload)
+        self.assertEqual(member.status_code, 403)
+
+        self.client.force_login(self.admin_user)
+        owner = self.client.post(reverse("main:create_project"), payload)
+        self.assertRedirects(owner, reverse("main:show_projects"))
+        self.assertTrue(Project.objects.filter(title="Protected Project").exists())
+
+    def test_authenticated_users_can_toggle_project_stars(self):
+        anonymous = self.client.post(reverse("main:toggle_star", args=[self.project.pk]))
+        self.assertRedirects(anonymous, f"{reverse('main:login')}?next=%2Fprojects%2F{self.project.pk}%2Fstar%2F")
+
+        self.client.force_login(self.user)
+        starred = self.client.post(reverse("main:toggle_star", args=[self.project.pk]))
+        self.assertRedirects(starred, reverse("main:show_projects"))
+        self.assertTrue(self.project.starred_by.filter(pk=self.user.pk).exists())
+
+        unstarred = self.client.post(reverse("main:toggle_star", args=[self.project.pk]))
+        self.assertRedirects(unstarred, reverse("main:show_projects"))
+        self.assertFalse(self.project.starred_by.filter(pk=self.user.pk).exists())
+
+    def test_project_controls_match_user_permissions(self):
+        anonymous_page = self.client.get(reverse("main:show_projects"))
+        self.assertNotContains(anonymous_page, reverse("main:create_project"))
+        self.assertContains(anonymous_page, reverse("main:toggle_star", args=[self.project.pk]))
+
+        self.client.force_login(self.admin_user)
+        owner_page = self.client.get(reverse("main:show_projects"))
+        self.assertContains(owner_page, reverse("main:create_project"))

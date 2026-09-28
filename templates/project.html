@@ -8,7 +8,9 @@
                     <p class="section-kicker">Portfolio archive</p>
                     <h1 id="projects-title">Projects</h1>
                 </div>
-                <a href="{% url 'main:create_project' %}" class="button project-add-button">Add project <span aria-hidden="true">+</span></a>
+                {% if user.is_superuser %}
+                    <a href="{% url 'main:create_project' %}" class="button project-add-button">Add project <span aria-hidden="true">+</span></a>
+                {% endif %}
             </div>
             <form class="project-search" method="get" action="{% url 'main:show_projects' %}">
                 <label class="sr-only" for="project-search">Search projects by title</label>
@@ -33,7 +35,10 @@
                             {% else %}
                                 <a href="{{ project.link_url }}" target="_blank" rel="noopener noreferrer">{{ project.link_label }} ↗</a>
                             {% endif %}
-                            {% include "components/project_delete_modal.html" with project=project %}
+                            {% include "components/project_star.html" with project=project %}
+                            {% if user.is_superuser %}
+                                {% include "components/project_delete_modal.html" with project=project %}
+                            {% endif %}
                         </div>
                     </article>
                 </li>

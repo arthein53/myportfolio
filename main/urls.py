@@ -12,9 +12,13 @@ from main.views import (
     show_experience,
     show_main,
     show_projects,
+    toggle_star,
     update_discography,
     update_experience,
     update_project,
+    register,
+    login_user,
+    logout_user,
 )
 
 app_name = "main"
@@ -32,8 +36,12 @@ urlpatterns = [
     path("projects/add/", create_project, name="create_project"),
     path("projects/<int:project_id>/update/", update_project, name="update_project"),
     path("projects/<int:project_id>/delete/", delete_project, name="delete_project"),
+    path("projects/<int:project_id>/star/", toggle_star, name="toggle_star"),
     path("discography/<int:entry_id>/update/", update_discography, name="update_discography"),
     path("discography/<int:entry_id>/delete/", delete_discography, name="delete_discography"),
     path("api/projects", get_projects_json, name="get_projects_json"),
     path("api/projects/", get_projects_json),
+    path("register/", register, name="register"),
+    path("login/", login_user, name="login"),
+    path("logout/", logout_user, name="logout"),
 ]

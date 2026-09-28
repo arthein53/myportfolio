@@ -1,5 +1,6 @@
 import uuid
 
+from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
 from django.db import models
 
@@ -49,6 +50,7 @@ class Project(models.Model):
     )
     tags = models.JSONField(default=list, blank=True, help_text='Example: ["Django", "Python"]')
     order = models.PositiveSmallIntegerField(default=0, db_index=True)
+    starred_by = models.ManyToManyField(User, related_name="starred_projects", blank=True)
 
     class Meta:
         ordering = ("order", "title")
