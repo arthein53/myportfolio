@@ -1,0 +1,21 @@
+<form
+  method="post"
+  action="{% url 'main:toggle_experience_star' experience.pk %}"
+  class="star-form"
+  data-star-form
+  data-star-item="{{ experience.title }}"
+>
+  {% csrf_token %}
+  <input type="hidden" name="return_to" value="experience" />
+  <button
+    type="submit"
+    class="star-button{% if user in experience.starred_by.all %} is-starred{% endif %}"
+    aria-label="{% if user in experience.starred_by.all %}Remove star from {{ experience.title }}{% else %}Star {{ experience.title }}{% endif %}"
+    title="{{ experience.starred_by.count }} stars"
+  >
+    <span class="star-icon" aria-hidden="true"
+      >{% if user in experience.starred_by.all %}★{% else %}☆{% endif %}</span
+    >
+    <span class="star-count">{{ experience.starred_by.count }}</span>
+  </button>
+</form>

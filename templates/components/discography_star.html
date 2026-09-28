@@ -1,0 +1,21 @@
+<form
+  method="post"
+  action="{% url 'main:toggle_discography_star' entry.pk %}"
+  class="star-form"
+  data-star-form
+  data-star-item="{{ entry.title }}"
+>
+  {% csrf_token %}
+  <input type="hidden" name="return_to" value="home" />
+  <button
+    type="submit"
+    class="star-button{% if user in entry.starred_by.all %} is-starred{% endif %}"
+    aria-label="{% if user in entry.starred_by.all %}Remove star from {{ entry.title }}{% else %}Star {{ entry.title }}{% endif %}"
+    title="{{ entry.starred_by.count }} stars"
+  >
+    <span class="star-icon" aria-hidden="true"
+      >{% if user in entry.starred_by.all %}★{% else %}☆{% endif %}</span
+    >
+    <span class="star-count">{{ entry.starred_by.count }}</span>
+  </button>
+</form>

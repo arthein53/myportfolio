@@ -8,14 +8,16 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.core import serializers
 from django.core.exceptions import PermissionDenied
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 
 from .forms import DiscographyForm, ExperienceForm, ProjectForm
 from .models import DiscographyEntry, Experience, Project
 
 
 PROFILE_CONTEXT = {"name": "Arlen", "npm": "2506613514", "study_program": "S1 Ilmu Komputer", "bio": "I work across data, AI/ML, and music-making, interested in how technical systems and creative practice can make each other more meaningful."}
+EDITOR_GROUP_NAME = "Editor"
 
 
 def show_main(request):
@@ -25,8 +27,8 @@ def show_main(request):
         "index.html",
         {
             **PROFILE_CONTEXT,
-            "projects": Project.objects.all(),
-            "discography_entries": DiscographyEntry.objects.all(),
+            "projects": Project.objects.prefetch_related("starred_by"),
+            "discography_entries": DiscographyEntry.objects.prefetch_related("starred_by"),
             "last_login": last_login,
         },
     )
@@ -34,7 +36,7 @@ def show_main(request):
 
 @login_required(login_url="/login/")
 def show_edit(request):
-    require_portfolio_owner(request)
+    require_portfolio_editor(request)
     return render(
         request,
         "edit.html",
@@ -43,6 +45,7 @@ def show_edit(request):
             "projects": Project.objects.all(),
             "experience_list": Experience.objects.all(),
             "discography_entries": DiscographyEntry.objects.all(),
+            "can_delete": request.user.is_superuser,
         },
     )
 
@@ -77,6 +80,15 @@ def require_portfolio_owner(request):
         raise PermissionDenied
 
 
+def is_portfolio_editor(user):
+    return user.is_authenticated and user.groups.filter(name=EDITOR_GROUP_NAME).exists()
+
+
+def require_portfolio_editor(request):
+    if not request.user.is_superuser and not is_portfolio_editor(request.user):
+        raise PermissionDenied
+
+
 @login_required(login_url="/login/")
 def create_experience(request):
     require_portfolio_owner(request)
@@ -97,16 +109,14 @@ def create_experience(request):
 
 @login_required(login_url="/login/")
 def update_experience(request, experience_id):
-    require_portfolio_owner(request)
+    require_portfolio_editor(request)
     experience = get_object_or_404(Experience, pk=experience_id)
     form = ExperienceForm(request.POST or None, instance=experience)
+    form.fields.pop("write_secret")
     if request.method == "POST" and form.is_valid():
-        if not has_valid_write_secret(request, form.cleaned_data["write_secret"]):
-            form.add_error("write_secret", "Invalid write code.")
-        else:
-            form.save()
-            messages.success(request, "Experience updated successfully.")
-            return redirect("main:show_edit" if request.POST.get("next") == "edit" else "main:show_experience")
+        form.save()
+        messages.success(request, "Experience updated successfully.")
+        return redirect("main:show_edit" if request.POST.get("next") == "edit" else "main:show_experience")
     return render(
         request,
         "experience_form.html",
@@ -148,35 +158,38 @@ def create_project(request):
 
 @login_required(login_url="/login/")
 def update_project(request, project_id):
-    require_portfolio_owner(request)
+    require_portfolio_editor(request)
     project = get_object_or_404(Project, pk=project_id)
     form = ProjectForm(request.POST or None, instance=project)
+    form.fields.pop("write_secret")
     if request.method == "POST" and form.is_valid():
-        if not has_valid_write_secret(request, form.cleaned_data["write_secret"]):
-            form.add_error("write_secret", "Invalid write code.")
-        else:
-            form.save()
-            messages.success(request, "Project updated successfully.")
-            return redirect("main:show_edit")
+        form.save()
+        messages.success(request, "Project updated successfully.")
+        return redirect("main:show_edit")
     return render(
         request,
         "projects_form.html",
-        {"name": "Arlen", "form": form, "page_title": "Update Project", "submit_label": "Update project", "cancel_url": "main:show_edit"},
+        {
+            "name": "Arlen",
+            "form": form,
+            "page_title": "Update Project",
+            "submit_label": "Update project",
+            "cancel_url": "main:show_edit",
+            "can_delete": request.user.is_superuser,
+        },
     )
 
 
 @login_required(login_url="/login/")
 def update_discography(request, entry_id):
-    require_portfolio_owner(request)
+    require_portfolio_editor(request)
     entry = get_object_or_404(DiscographyEntry, pk=entry_id)
     form = DiscographyForm(request.POST or None, instance=entry)
+    form.fields.pop("write_secret")
     if request.method == "POST" and form.is_valid():
-        if not has_valid_write_secret(request, form.cleaned_data["write_secret"]):
-            form.add_error("write_secret", "Invalid write code.")
-        else:
-            form.save()
-            messages.success(request, "Release updated successfully.")
-            return redirect("main:show_edit")
+        form.save()
+        messages.success(request, "Release updated successfully.")
+        return redirect("main:show_edit")
     return render(request, "discography_form.html", {"name": "Arlen", "form": form})
 
 
@@ -265,9 +278,67 @@ def toggle_star(request, project_id):
     project = get_object_or_404(Project, pk=project_id)
 
     if request.method == "POST":
-        if request.user in project.starred_by.all():
-            project.starred_by.remove(request.user)
-        else:
-            project.starred_by.add(request.user)
+        toggle_user_star(request.user, project.starred_by)
 
+    json_response = star_toggle_json_response(request, project.starred_by)
+    if json_response:
+        return json_response
+
+    return_to = request.POST.get("return_to")
+    if return_to == "home":
+        return redirect(f"{reverse('main:show_main')}#project-{project.pk}")
+    if return_to == "projects":
+        return redirect(f"{reverse('main:show_projects')}#project-{project.pk}")
     return redirect("main:show_projects")
+
+
+def toggle_user_star(user, starred_by):
+    if starred_by.filter(pk=user.pk).exists():
+        starred_by.remove(user)
+        return False
+    else:
+        starred_by.add(user)
+        return True
+
+
+def star_toggle_json_response(request, starred_by):
+    if "application/json" in request.headers.get("Accept", ""):
+        return JsonResponse(
+            {
+                "starred": starred_by.filter(pk=request.user.pk).exists(),
+                "count": starred_by.count(),
+            }
+        )
+    return None
+
+
+@login_required(login_url="/login/")
+def toggle_experience_star(request, experience_id):
+    experience = get_object_or_404(Experience, pk=experience_id)
+
+    if request.method == "POST":
+        toggle_user_star(request.user, experience.starred_by)
+
+    json_response = star_toggle_json_response(request, experience.starred_by)
+    if json_response:
+        return json_response
+
+    if request.POST.get("return_to") == "experience":
+        return redirect(f"{reverse('main:show_experience')}#experience-{experience.pk}")
+    return redirect("main:show_experience")
+
+
+@login_required(login_url="/login/")
+def toggle_discography_star(request, entry_id):
+    entry = get_object_or_404(DiscographyEntry, pk=entry_id)
+
+    if request.method == "POST":
+        toggle_user_star(request.user, entry.starred_by)
+
+    json_response = star_toggle_json_response(request, entry.starred_by)
+    if json_response:
+        return json_response
+
+    if request.POST.get("return_to") == "home":
+        return redirect(f"{reverse('main:show_main')}#discography-{entry.pk}")
+    return redirect("main:show_main")

@@ -1,5 +1,7 @@
+import json
+
 from django.contrib import admin
-from django.contrib.auth.models import User
+from django.contrib.auth.models import Group, User
 from django.core.management import call_command
 from django.test import TestCase, override_settings
 from django.urls import reverse
@@ -12,6 +14,9 @@ from main.models import DiscographyEntry, Experience, Project
 class MainTest(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(username="member", password="member-password")
+        self.editor_group = Group.objects.create(name="Editor")
+        self.editor_user = User.objects.create_user(username="editor", password="editor-password")
+        self.editor_user.groups.add(self.editor_group)
         self.admin_user = User.objects.create_superuser(
             username="owner",
             password="owner-password",
@@ -52,7 +57,7 @@ class MainTest(TestCase):
         self.assertIn(Experience, admin.site._registry)
 
     def test_main_url_is_accessible(self):
-        with self.assertNumQueries(2):
+        with self.assertNumQueries(4):
             response = self.client.get(reverse("main:show_main"))
 
         self.assertEqual(response.status_code, 200)
@@ -64,6 +69,8 @@ class MainTest(TestCase):
         self.assertContains(response, "Composer")
         self.assertContains(response, self.release.audio_filename)
         self.assertContains(response, f'href="{reverse("main:show_experience")}"')
+        self.assertContains(response, reverse("main:toggle_star", args=[self.project.pk]))
+        self.assertContains(response, reverse("main:toggle_discography_star", args=[self.release.pk]))
 
     def test_nonexistent_page_returns_404(self):
         response = self.client.get("/halaman-yang-tidak-ada/")
@@ -138,6 +145,8 @@ class MainTest(TestCase):
         self.assertContains(response, self.experience.thumbnail)
         self.assertContains(response, "Part-Time")
         self.assertContains(response, "Ongoing")
+        self.assertContains(response, reverse("main:toggle_experience_star", args=[self.experience.pk]))
+        self.assertNotContains(response, "components/experience_star.html")
         self.assertContains(response, f'href="{reverse("main:show_main")}"')
         for fragment in ("skills", "projects", "discography"):
             self.assertContains(response, f'href="{reverse("main:show_main")}#{fragment}"')
@@ -190,11 +199,19 @@ class MainTest(TestCase):
 
     @override_settings(PROJECT_WRITE_SECRET="test-write-secret")
     def test_project_json_and_delete_endpoint(self):
+        self.project.starred_by.add(self.user)
         response = self.client.get(reverse("main:get_projects_json"))
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response["Content-Type"], "application/json")
         self.assertContains(response, self.project.title)
+        project_payload = next(
+            item
+            for item in json.loads(response.content)
+            if item["pk"] == self.project.pk
+        )
+        self.assertEqual(project_payload["fields"]["starred_by"], [[self.user.username]])
+        self.assertNotContains(response, "member-password")
         self.client.force_login(self.admin_user)
         deleted = self.client.post(reverse("main:delete_project", args=[self.project.pk]), {"password": "test-write-secret"})
         self.assertRedirects(deleted, reverse("main:show_projects"))
@@ -417,6 +434,78 @@ class MainTest(TestCase):
         self.assertRedirects(unstarred, reverse("main:show_projects"))
         self.assertFalse(self.project.starred_by.filter(pk=self.user.pk).exists())
 
+    def test_authenticated_users_can_toggle_experience_stars(self):
+        self.client.force_login(self.user)
+
+        starred = self.client.post(
+            reverse("main:toggle_experience_star", args=[self.experience.pk])
+        )
+
+        self.assertRedirects(starred, reverse("main:show_experience"))
+        self.assertTrue(self.experience.starred_by.filter(pk=self.user.pk).exists())
+
+        unstarred = self.client.post(
+            reverse("main:toggle_experience_star", args=[self.experience.pk])
+        )
+        self.assertRedirects(unstarred, reverse("main:show_experience"))
+        self.assertFalse(self.experience.starred_by.filter(pk=self.user.pk).exists())
+
+    def test_authenticated_users_can_toggle_discography_stars(self):
+        self.client.force_login(self.user)
+
+        starred = self.client.post(
+            reverse("main:toggle_discography_star", args=[self.release.pk])
+        )
+
+        self.assertRedirects(starred, reverse("main:show_main"))
+        self.assertTrue(self.release.starred_by.filter(pk=self.user.pk).exists())
+
+        unstarred = self.client.post(
+            reverse("main:toggle_discography_star", args=[self.release.pk])
+        )
+        self.assertRedirects(unstarred, reverse("main:show_main"))
+        self.assertFalse(self.release.starred_by.filter(pk=self.user.pk).exists())
+
+    def test_star_toggles_return_to_their_original_item(self):
+        self.client.force_login(self.user)
+
+        project_response = self.client.post(
+            reverse("main:toggle_star", args=[self.project.pk]),
+            {"return_to": "home"},
+        )
+        experience_response = self.client.post(
+            reverse("main:toggle_experience_star", args=[self.experience.pk]),
+            {"return_to": "experience"},
+        )
+        discography_response = self.client.post(
+            reverse("main:toggle_discography_star", args=[self.release.pk]),
+            {"return_to": "home"},
+        )
+
+        self.assertEqual(
+            project_response["Location"],
+            f"{reverse('main:show_main')}#project-{self.project.pk}",
+        )
+        self.assertEqual(
+            experience_response["Location"],
+            f"{reverse('main:show_experience')}#experience-{self.experience.pk}",
+        )
+        self.assertEqual(
+            discography_response["Location"],
+            f"{reverse('main:show_main')}#discography-{self.release.pk}",
+        )
+
+    def test_star_toggle_returns_json_for_asynchronous_requests(self):
+        self.client.force_login(self.user)
+
+        response = self.client.post(
+            reverse("main:toggle_star", args=[self.project.pk]),
+            HTTP_ACCEPT="application/json",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {"starred": True, "count": 1})
+
     def test_project_controls_match_user_permissions(self):
         anonymous_page = self.client.get(reverse("main:show_projects"))
         self.assertNotContains(anonymous_page, reverse("main:create_project"))
@@ -425,3 +514,60 @@ class MainTest(TestCase):
         self.client.force_login(self.admin_user)
         owner_page = self.client.get(reverse("main:show_projects"))
         self.assertContains(owner_page, reverse("main:create_project"))
+
+    @override_settings(PROJECT_WRITE_SECRET="test-write-secret")
+    def test_editor_can_update_but_cannot_create_or_delete_portfolio_data(self):
+        self.client.force_login(self.editor_user)
+
+        edit_page = self.client.get(reverse("main:show_edit"))
+        self.assertEqual(edit_page.status_code, 200)
+        self.assertContains(edit_page, reverse("main:update_project", args=[self.project.pk]))
+        self.assertNotContains(edit_page, reverse("main:delete_project", args=[self.project.pk]))
+
+        update = self.client.post(
+            reverse("main:update_project", args=[self.project.pk]),
+            {
+                "title": "Editor Updated Project",
+                "description": "Updated by the editor role.",
+                "period": "2026",
+                "organization": "Personal",
+                "link_label": "Open project",
+                "link_url": "https://example.com/editor-updated",
+                "tags": "Django, Authorization",
+                "order": 1,
+            },
+        )
+        self.assertRedirects(update, reverse("main:show_edit"))
+        self.project.refresh_from_db()
+        self.assertEqual(self.project.title, "Editor Updated Project")
+
+        self.assertEqual(
+            self.client.get(reverse("main:update_experience", args=[self.experience.pk])).status_code,
+            200,
+        )
+        self.assertEqual(
+            self.client.get(reverse("main:update_discography", args=[self.release.pk])).status_code,
+            200,
+        )
+
+        create = self.client.post(reverse("main:create_project"), {})
+        self.assertEqual(create.status_code, 403)
+        delete = self.client.post(reverse("main:delete_project", args=[self.project.pk]), {"password": "test-write-secret"})
+        self.assertEqual(delete.status_code, 403)
+
+    def test_regular_users_cannot_open_the_edit_page_or_update_data(self):
+        self.client.force_login(self.user)
+
+        self.assertEqual(self.client.get(reverse("main:show_edit")).status_code, 403)
+        self.assertEqual(
+            self.client.get(reverse("main:update_project", args=[self.project.pk])).status_code,
+            403,
+        )
+        self.assertEqual(
+            self.client.get(reverse("main:update_experience", args=[self.experience.pk])).status_code,
+            403,
+        )
+        self.assertEqual(
+            self.client.get(reverse("main:update_discography", args=[self.release.pk])).status_code,
+            403,
+        )

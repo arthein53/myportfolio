@@ -26,7 +26,7 @@
                         <a href="{% url cancel_url %}" class="button button-secondary">Cancel</a>
                     </div>
                 </form>
-                {% if page_title == "Update Project" %}
+                {% if page_title == "Update Project" and can_delete %}
                     <details class="delete-confirmation">
                         <summary class="button button-danger">Delete project</summary>
                         <form method="post" action="{% url 'main:delete_project' form.instance.pk %}">

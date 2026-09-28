@@ -125,7 +125,7 @@
                 <ol class="projects-list">
                     {% for project in projects %}
                     <li>
-                        <article class="project">
+                        <article class="project" id="project-{{ project.pk }}">
                             <p class="project-number" aria-hidden="true">{{ forloop.counter|stringformat:"02d" }}</p>
                             <div class="project-content">
                                 <h3>{{ project.title }}</h3>
@@ -142,6 +142,7 @@
                                 {% else %}
                                     <a href="{{ project.link_url }}" target="_blank" rel="noopener noreferrer">{{ project.link_label }} ↗</a>
                                 {% endif %}
+                                {% include "components/project_star.html" with project=project star_return_to="home" %}
                             </div>
                         </article>
                     </li>
@@ -161,10 +162,11 @@
                 <ol class="discography-list">
                     {% for entry in discography_entries %}
                     <li>
-                        <article class="discography-item" data-audio-src="{% url 'audio_file' entry.audio_filename %}" tabindex="0">
+                        <article class="discography-item" id="discography-{{ entry.pk }}" data-audio-src="{% url 'audio_file' entry.audio_filename %}" tabindex="0">
                             <div class="discography-meta">
                                 <p>{{ entry.release_type }}</p><p>{{ entry.context }}</p>
                                 {% for link in entry.links %}<a href="{{ link.url }}" target="_blank" rel="noopener noreferrer">{{ link.label }} ↗</a>{% endfor %}
+                                {% include "components/discography_star.html" with entry=entry %}
                             </div>
                             <div class="discography-content">
                                 <h3>{{ entry.title }}</h3>
