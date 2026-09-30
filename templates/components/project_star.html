@@ -3,17 +3,17 @@
   action="{% url 'main:toggle_star' project.pk %}"
   class="star-form"
   data-star-form
-  data-star-item="{{ project.title }}"
+
 >
   {% csrf_token %}
   <input type="hidden" name="return_to" value="{{ star_return_to|default:'projects' }}" />
   <button
     type="submit"
     class="star-button{% if user in project.starred_by.all %} is-starred{% endif %}"
-    aria-label="{% if user in project.starred_by.all %}Remove star from {{ project.title }}{% else %}Star {{ project.title }}{% endif %}"
+
     title="{{ project.starred_by.count }} stars"
   >
-    <span class="star-icon" aria-hidden="true"
+    <span class="star-icon"
       >{% if user in project.starred_by.all %}★{% else %}☆{% endif %}</span
     >
     <span class="star-count">{{ project.starred_by.count }}</span>

@@ -1,6 +1,6 @@
 {% extends "base.html" %} {% block content %}
 <main>
-  <section class="section projects-page" aria-labelledby="projects-title">
+  <section class="section projects-page">
     <div class="container">
       <div class="projects-page-header">
         <div>
@@ -11,7 +11,7 @@
         <a
           href="{% url 'main:create_project' %}"
           class="button project-add-button"
-          >Add project <span aria-hidden="true">+</span></a
+          >Add project <span>+</span></a
         >
         {% endif %}
       </div>
@@ -39,13 +39,13 @@
         {% for project in project_list %}
         <li>
           <article class="project" id="project-{{ project.pk }}">
-            <p class="project-number" aria-hidden="true">
+            <p class="project-number">
               {{ forloop.counter|stringformat:"02d" }}
             </p>
             <div class="project-content">
               <h2>{{ project.title }}</h2>
               <p>{{ project.description }}</p>
-              <ul class="project-tags" aria-label="Project tags">
+              <ul class="project-tags">
                 {% for tag in project.tags %}
                 <li>{{ tag }}</li>
                 {% endfor %}
