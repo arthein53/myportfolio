@@ -185,16 +185,6 @@
   overflow: hidden;
 }
 
-.section-title {
-  max-width: none;
-  color: var(--ink);
-  font-family: inherit;
-  font-size: clamp(2.25rem, 4vw, 3.5rem);
-  font-weight: 600;
-  letter-spacing: -0.045em;
-  line-height: 1.12;
-}
-
 /* Projects */
 .projects-section {
   padding-top: 5rem;
@@ -614,15 +604,6 @@
   to {
     transform: translateX(0);
   }
-}
-
-.section-kicker {
-  margin-bottom: 0.75rem;
-  color: var(--text-muted);
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
 }
 
 /* @media (prefers-reduced-motion: reduce) {

@@ -34,6 +34,9 @@
                         <a href="https://www.linkedin.com/in/rafael-arlen-wijanarko-84ba83218/" class="social-link" title="LinkedIn"><img src="{% static 'img/social-icons/linkedin.png' %}" alt=""></a>
                         <a href="mailto:arlenwijanarko250307@gmail.com" class="social-link" title="Email"><img src="{% static 'img/social-icons/gmail.png' %}" alt=""></a>
                     </div>
+                    <button class="button button-secondary" onclick="showToast('Notifikasi Sistem', 'Project berhasil dimuat dengan baik!', 'success')">
+                        Test Toast Notifikasi
+                    </button>
                 </div>
             </div>
         </section>
@@ -116,71 +119,6 @@
             </div>
         </section>
 
-        <section class="section projects-section" id="projects">
-            <div class="container">
-                <p class="section-kicker">Years of dedication, collaboration focused</p>
-                <h2 class="section-title">My Projects</h2>
-            </div>
-            <div class="container">
-                <ol class="projects-list">
-                    {% for project in projects %}
-                    <li>
-                        <article class="project" id="project-{{ project.pk }}">
-                            <p class="project-number">{{ forloop.counter|stringformat:"02d" }}</p>
-                            <div class="project-content">
-                                <h3>{{ project.title }}</h3>
-                                <p>{{ project.description }}</p>
-                                <ul class="project-tags">
-                                    {% for tag in project.tags %}<li>{{ tag }}</li>{% endfor %}
-                                </ul>
-                            </div>
-                            <div class="project-meta">
-                                <p>{{ project.period }}</p>
-                                <p>{{ project.organization }}</p>
-                                {% if project.links %}
-                                    {% for link in project.links %}<a href="{{ link.url }}" target="_blank" rel="noopener noreferrer">{{ link.label }} ↗</a>{% endfor %}
-                                {% else %}
-                                    <a href="{{ project.link_url }}" target="_blank" rel="noopener noreferrer">{{ project.link_label }} ↗</a>
-                                {% endif %}
-                                {% include "components/project_star.html" with project=project star_return_to="home" %}
-                            </div>
-                        </article>
-                    </li>
-                    {% empty %}
-                    <li><p>No projects have been added yet.</p></li>
-                    {% endfor %}
-                </ol>
-            </div>
-        </section>
 
-        <section class="section discography-section" id="discography">
-            <div class="container">
-                <p class="section-kicker">Code was not enough, apparently.</p>
-                <h2 class="section-title">My Discography</h2>
-            </div>
-            <div class="container">
-                <ol class="discography-list">
-                    {% for entry in discography_entries %}
-                    <li>
-                        <article class="discography-item" id="discography-{{ entry.pk }}" data-audio-src="{% url 'audio_file' entry.audio_filename %}" tabindex="0">
-                            <div class="discography-meta">
-                                <p>{{ entry.release_type }}</p><p>{{ entry.context }}</p>
-                                {% for link in entry.links %}<a href="{{ link.url }}" target="_blank" rel="noopener noreferrer">{{ link.label }} ↗</a>{% endfor %}
-                                {% include "components/discography_star.html" with entry=entry %}
-                            </div>
-                            <div class="discography-content">
-                                <h3>{{ entry.title }}</h3>
-                                <p>{{ entry.description }}</p>
-                                <ul class="project-tags">{% for role in entry.roles %}<li>{{ role }}</li>{% endfor %}</ul>
-                            </div>
-                            <p class="discography-number">{{ forloop.counter|stringformat:"02d" }}</p>
-                        </article>
-                    </li>
-                    {% empty %}
-                    <li><p>No releases have been added yet.</p></li>
-                    {% endfor %}
-                </ol>
-            </div>
-        </section>
     </main>
 {% endblock content %}

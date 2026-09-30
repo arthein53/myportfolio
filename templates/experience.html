@@ -1,16 +1,23 @@
 {% extends 'base.html' %} {% load static %} {% block content %}
 <main>
-  <section class="experience-section" id="experience">
+  <section class="content-page experience-page" id="experience">
     <div class="container">
-      <div class="experience-page-header">
+      <div class="content-page-header">
         <div>
           <p class="section-kicker">My journey</p>
-          <h1>Experience</h1>
+          <h1 class="content-page-title">Experience</h1>
         </div>
       </div>
       {% if messages %}{% for message in messages %}
-      <p class="project-message">{{ message }}</p>
+      <p class="page-message">{{ message }}</p>
       {% endfor %}{% endif %}
+      <form class="content-page-search" method="get" action="{% url 'main:show_experience' %}">
+        <div class="content-page-search-field">
+          <label for="experience-search">Search experience by title</label>
+          <input id="experience-search" type="search" name="title" value="{{ title_query }}" placeholder="Type an experience title">
+        </div>
+        <button class="button" type="submit">Search experience</button>
+      </form>
 
       <div class="experience-grid">
         {% for experience in experience_list %}
@@ -57,7 +64,7 @@
           </div>
         </article>
         {% empty %}
-        <p class="empty-state">No experience added yet.</p>
+        <p class="empty-state">{% if title_query %}No experience matches that title.{% else %}No experience added yet.{% endif %}</p>
         {% endfor %}
       </div>
     </div>

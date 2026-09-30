@@ -1,0 +1,149 @@
+/* Discography page */
+.discography-list {
+  margin: 2.5rem 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+
+.discography-list > li {
+  position: relative;
+  border-bottom: 1px solid var(--line);
+  background-color: var(--paper);
+  transition: background-color 180ms ease;
+}
+
+.discography-list > li:nth-child(even) {
+  background-color: var(--hero-background);
+}
+
+.discography-list > li::after {
+  position: absolute;
+  inset: 0 0 0 auto;
+  width: 0.35rem;
+  content: "";
+  background-color: var(--accent);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 180ms ease;
+}
+
+.discography-list > li:hover::after,
+.discography-list > li:focus-within::after {
+  transform: scaleY(1);
+}
+
+.discography-item {
+  display: grid;
+  grid-template-columns: minmax(10rem, 14rem) minmax(0, 1fr) 3rem;
+  gap: 2rem;
+  align-items: start;
+  padding: 2.25rem 1.5rem;
+  text-align: right;
+  cursor: pointer;
+}
+
+.discography-item:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: -4px;
+}
+
+.discography-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.35rem;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.discography-meta > a {
+  width: fit-content;
+  margin-top: 0.7rem;
+  color: var(--accent-dark);
+  text-underline-offset: 0.25em;
+}
+
+.discography-content > h2 {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(1.4rem, 2.6vw, 2rem);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 1.3;
+  transition:
+    color 180ms ease,
+    transform 180ms ease;
+}
+
+.discography-list > li:hover .discography-content > h2,
+.discography-list > li:focus-within .discography-content > h2 {
+  color: var(--accent-dark);
+  transform: translateX(-0.35rem);
+}
+
+.discography-content > p {
+  max-width: 42rem;
+  margin: 0.9rem 0 0 auto;
+  color: var(--text-muted);
+}
+
+.discography-content .project-tags {
+  justify-content: flex-end;
+}
+
+.discography-number {
+  display: grid;
+  width: 3rem;
+  height: 3rem;
+  place-items: center;
+  margin: 0;
+  color: var(--paper);
+  background-color: var(--accent);
+  box-shadow: -4px 4px 0 var(--ink);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.discography-list > li:has(.discography-item.is-player-open)::after {
+  transform: scaleY(1);
+}
+
+.discography-player[hidden] {
+  display: none;
+}
+
+.discography-player {
+  display: grid;
+  justify-items: center;
+  padding: 0 1.5rem 2.25rem;
+}
+
+.discography-player audio {
+  width: min(100%, 34rem);
+  height: 2.5rem;
+  accent-color: var(--accent);
+}
+
+@media (max-width: 600px) {
+  .discography-item {
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+    padding: 1.5rem 1rem;
+  }
+
+  .discography-meta {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.5rem 1rem;
+  }
+
+  .discography-meta > a {
+    flex-basis: 100%;
+    margin-top: 0.25rem;
+  }
+}

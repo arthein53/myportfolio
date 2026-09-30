@@ -27,8 +27,6 @@ def show_main(request):
         "index.html",
         {
             **PROFILE_CONTEXT,
-            "projects": Project.objects.prefetch_related("starred_by"),
-            "discography_entries": DiscographyEntry.objects.prefetch_related("starred_by"),
             "last_login": last_login,
         },
     )
@@ -51,8 +49,13 @@ def show_edit(request):
 
 
 def get_experiences_json(request):
+    title_query = request.GET.get("title", "").strip()
+    experiences = Experience.objects.all()
+    if title_query:
+        experiences = experiences.filter(title__icontains=title_query)
+
     return HttpResponse(
-        serializers.serialize("json", Experience.objects.all()),
+        serializers.serialize("json", experiences),
         content_type="application/json",
     )
 
@@ -63,7 +66,15 @@ def show_experience(request):
         item.object
         for item in serializers.deserialize("json", json_response.content.decode("utf-8"))
     ]
-    return render(request, "experience.html", {"name": "Arlen", "experience_list": experiences})
+    return render(
+        request,
+        "experience.html",
+        {
+            "name": PROFILE_CONTEXT["name"],
+            "experience_list": experiences,
+            "title_query": request.GET.get("title", "").strip(),
+        },
+    )
 
 
 def has_valid_write_secret(request, submitted_secret):
@@ -219,8 +230,36 @@ def get_projects_json(request):
 
 def show_projects(request):
     json_response = get_projects_json(request)
-    projects = [item.object for item in serializers.deserialize("json", json_response.content.decode("utf-8"))]
-    return render(request, "project.html", {"name": "Arlen", "project_list": projects, "title_query": request.GET.get("title", "").strip()})
+    projects = [
+        item.object
+        for item in serializers.deserialize("json", json_response.content.decode("utf-8"))
+    ]
+    return render(
+        request,
+        "project.html",
+        {
+            "name": PROFILE_CONTEXT["name"],
+            "project_list": projects,
+            "title_query": request.GET.get("title", "").strip(),
+        },
+    )
+
+
+def show_discography(request):
+    title_query = request.GET.get("title", "").strip()
+    discography_entries = DiscographyEntry.objects.prefetch_related("starred_by")
+    if title_query:
+        discography_entries = discography_entries.filter(title__icontains=title_query)
+
+    return render(
+        request,
+        "discography.html",
+        {
+            "name": PROFILE_CONTEXT["name"],
+            "discography_entries": discography_entries,
+            "title_query": title_query,
+        },
+    )
 
 
 @login_required(login_url="/login/")
@@ -339,6 +378,6 @@ def toggle_discography_star(request, entry_id):
     if json_response:
         return json_response
 
-    if request.POST.get("return_to") == "home":
-        return redirect(f"{reverse('main:show_main')}#discography-{entry.pk}")
-    return redirect("main:show_main")
+    if request.POST.get("return_to") == "discography":
+        return redirect(f"{reverse('main:show_discography')}#discography-{entry.pk}")
+    return redirect(f"{reverse('main:show_main')}#discography-{entry.pk}")

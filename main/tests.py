@@ -57,20 +57,37 @@ class MainTest(TestCase):
         self.assertIn(Experience, admin.site._registry)
 
     def test_main_url_is_accessible(self):
-        with self.assertNumQueries(4):
+        with self.assertNumQueries(0):
             response = self.client.get(reverse("main:show_main"))
 
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "index.html")
         self.assertNotContains(response, self.experience.title)
-        self.assertContains(response, self.project.title)
-        self.assertContains(response, "Django")
-        self.assertContains(response, self.release.title)
-        self.assertContains(response, "Composer")
-        self.assertContains(response, self.release.audio_filename)
+        self.assertNotContains(response, self.project.title)
+        self.assertNotContains(response, self.release.title)
         self.assertContains(response, f'href="{reverse("main:show_experience")}"')
-        self.assertContains(response, reverse("main:toggle_star", args=[self.project.pk]))
-        self.assertContains(response, reverse("main:toggle_discography_star", args=[self.release.pk]))
+        self.assertContains(response, f'href="{reverse("main:show_projects")}"')
+        self.assertContains(response, f'href="{reverse("main:show_discography")}"')
+
+    def test_projects_and_discography_are_separate_from_the_homepage(self):
+        homepage = self.client.get(reverse("main:show_main"))
+        discography = self.client.get(reverse("main:show_discography"))
+
+        self.assertNotContains(homepage, self.project.title)
+        self.assertNotContains(homepage, self.release.title)
+        self.assertContains(discography, self.release.title)
+        self.assertContains(
+            discography,
+            reverse("main:toggle_discography_star", args=[self.release.pk]),
+        )
+
+    def test_discography_page_filters_by_title(self):
+        response = self.client.get(reverse("main:show_discography"))
+        filtered = self.client.get(reverse("main:show_discography"), {"title": "no match"})
+
+        self.assertContains(response, "Search discography by title")
+        self.assertContains(response, self.release.title)
+        self.assertContains(filtered, "No discography entries match that title.")
 
     def test_nonexistent_page_returns_404(self):
         response = self.client.get("/halaman-yang-tidak-ada/")
@@ -148,8 +165,17 @@ class MainTest(TestCase):
         self.assertContains(response, reverse("main:toggle_experience_star", args=[self.experience.pk]))
         self.assertNotContains(response, "components/experience_star.html")
         self.assertContains(response, f'href="{reverse("main:show_main")}"')
-        for fragment in ("skills", "projects", "discography"):
-            self.assertContains(response, f'href="{reverse("main:show_main")}#{fragment}"')
+        self.assertContains(response, f'href="{reverse("main:show_main")}#skills"')
+        self.assertContains(response, f'href="{reverse("main:show_projects")}"')
+        self.assertContains(response, f'href="{reverse("main:show_discography")}"')
+
+    def test_experience_page_filters_by_title(self):
+        response = self.client.get(reverse("main:show_experience"))
+        filtered = self.client.get(reverse("main:show_experience"), {"title": "no match"})
+
+        self.assertContains(response, "Search experience by title")
+        self.assertContains(response, self.experience.title)
+        self.assertContains(filtered, "No experience matches that title.")
 
     def test_empty_experience_page(self):
         Experience.objects.all().delete()
@@ -183,7 +209,7 @@ class MainTest(TestCase):
                 },
             ],
         )
-        response = self.client.get(reverse("main:show_main"))
+        response = self.client.get(reverse("main:show_projects"))
         self.assertContains(response, paralab.title)
         self.assertContains(response, "https://paralab-theta.vercel.app")
         self.assertContains(response, "https://github.com/Ini-statement-aku-yang-paling-baddie/paralab-architecture")
@@ -457,13 +483,19 @@ class MainTest(TestCase):
             reverse("main:toggle_discography_star", args=[self.release.pk])
         )
 
-        self.assertRedirects(starred, reverse("main:show_main"))
+        self.assertRedirects(
+            starred,
+            f"{reverse('main:show_main')}#discography-{self.release.pk}",
+        )
         self.assertTrue(self.release.starred_by.filter(pk=self.user.pk).exists())
 
         unstarred = self.client.post(
             reverse("main:toggle_discography_star", args=[self.release.pk])
         )
-        self.assertRedirects(unstarred, reverse("main:show_main"))
+        self.assertRedirects(
+            unstarred,
+            f"{reverse('main:show_main')}#discography-{self.release.pk}",
+        )
         self.assertFalse(self.release.starred_by.filter(pk=self.user.pk).exists())
 
     def test_star_toggles_return_to_their_original_item(self):

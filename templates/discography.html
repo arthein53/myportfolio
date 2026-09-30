@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block meta %}
+<meta name="description" content="Discography by {{ name }}">
+{% endblock meta %}
+
+{% block content %}
+<main>
+    <section class="content-page discography-page">
+        <div class="container">
+            <div class="content-page-header">
+                <div>
+                    <p class="section-kicker">Code was not enough, apparently.</p>
+                    <h1 class="content-page-title">Discography</h1>
+                </div>
+            </div>
+            <form class="content-page-search" method="get" action="{% url 'main:show_discography' %}">
+                <div class="content-page-search-field">
+                    <label for="discography-search">Search discography by title</label>
+                    <input id="discography-search" type="search" name="title" value="{{ title_query }}" placeholder="Type a release name">
+                </div>
+                <button class="button" type="submit">Search discography</button>
+            </form>
+        </div>
+        <div class="container">
+            <ol class="discography-list">
+                {% for entry in discography_entries %}
+                <li>
+                    <article class="discography-item" id="discography-{{ entry.pk }}" data-audio-src="{% url 'audio_file' entry.audio_filename %}" tabindex="0">
+                        <div class="discography-meta">
+                            <p>{{ entry.release_type }}</p><p>{{ entry.context }}</p>
+                            {% for link in entry.links %}<a href="{{ link.url }}" target="_blank" rel="noopener noreferrer">{{ link.label }} ↗</a>{% endfor %}
+                            {% include "components/discography_star.html" with entry=entry star_return_to="discography" %}
+                        </div>
+                        <div class="discography-content">
+                            <h2>{{ entry.title }}</h2>
+                            <p>{{ entry.description }}</p>
+                            <ul class="project-tags">{% for role in entry.roles %}<li>{{ role }}</li>{% endfor %}</ul>
+                        </div>
+                        <p class="discography-number">{{ forloop.counter|stringformat:"02d" }}</p>
+                    </article>
+                </li>
+                {% empty %}
+                <li><p class="empty-state">{% if title_query %}No discography entries match that title.{% else %}No releases have been added yet.{% endif %}</p></li>
+                {% endfor %}
+            </ol>
+        </div>
+    </section>
+</main>
+{% endblock content %}

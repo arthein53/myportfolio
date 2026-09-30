@@ -6,7 +6,7 @@
 
 >
   {% csrf_token %}
-  <input type="hidden" name="return_to" value="home" />
+  <input type="hidden" name="return_to" value="{{ star_return_to|default:'home' }}" />
   <button
     type="submit"
     class="star-button{% if user in entry.starred_by.all %} is-starred{% endif %}"

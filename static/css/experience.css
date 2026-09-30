@@ -1,16 +1,4 @@
 /* Experience */
-.experience-section {
-  min-height: calc(100vh - 10rem);
-  padding: 5rem 0 7rem;
-  border-top: 1px solid var(--line);
-  background-color: var(--paper);
-}
-
-.experience-section h1 {
-  margin: 0.4rem 0 0;
-  font-size: clamp(2.4rem, 5vw, 4rem);
-}
-
 .experience-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -155,4 +143,24 @@
   grid-column: 1 / -1;
   padding: 2rem 1.5rem;
   border: 1px solid var(--line);
+}
+
+@media (max-width: 900px) {
+  .experience-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .experience-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .experience-card-content {
+    padding: 1rem;
+  }
+
+  .experience-status {
+    padding-top: 1.25rem;
+  }
 }

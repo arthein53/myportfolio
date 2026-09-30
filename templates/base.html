@@ -23,8 +23,8 @@
             <nav id="primary-nav">
                 <a href="{% url 'main:show_main' %}">Profile</a>
                 <a href="{% url 'main:show_main' %}#skills">Skills</a>
-                <a href="{% url 'main:show_main' %}#projects">Projects</a>
-                <a href="{% url 'main:show_main' %}#discography">Discography</a>
+                <a href="{% url 'main:show_projects' %}">Projects</a>
+                <a href="{% url 'main:show_discography' %}">Discography</a>
                 <a href="{% url 'main:show_experience' %}">Experience</a>
                 {% if user.is_authenticated %}
                     <span class="nav-user">{{ user.username }}</span>
@@ -48,5 +48,7 @@
             <p>&copy; 2026 {{ name }}. Fakultas Ilmu Komputer, Universitas Indonesia.</p>
         </div>
     </footer>
+
+    {% include 'components/toast.html' %}
 </body>
 </html>

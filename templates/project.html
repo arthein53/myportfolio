@@ -1,11 +1,11 @@
 {% extends "base.html" %} {% block content %}
 <main>
-  <section class="section projects-page">
+  <section class="content-page projects-page">
     <div class="container">
-      <div class="projects-page-header">
+      <div class="content-page-header">
         <div>
           <p class="section-kicker">Portfolio archive</p>
-          <h1 id="projects-title">Projects</h1>
+          <h1 id="projects-title" class="content-page-title">Projects</h1>
         </div>
         {% if user.is_superuser %}
         <a
@@ -16,11 +16,11 @@
         {% endif %}
       </div>
       <form
-        class="project-search"
+        class="content-page-search"
         method="get"
         action="{% url 'main:show_projects' %}"
       >
-        <div class="project-search-field">
+        <div class="content-page-search-field">
           <label for="project-search">Search projects by title</label>
           <input
             id="project-search"
@@ -33,7 +33,7 @@
         <button class="button" type="submit">Search projects</button>
       </form>
       {% if messages %}{% for message in messages %}
-      <p class="project-message">{{ message }}</p>
+      <p class="page-message">{{ message }}</p>
       {% endfor %}{% endif %}
       <ol class="projects-list projects-page-list">
         {% for project in project_list %}
