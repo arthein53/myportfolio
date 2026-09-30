@@ -11,6 +11,7 @@ from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
+from django.views.decorators.http import require_POST
 
 from .forms import DiscographyForm, ExperienceForm, ProjectForm
 from .models import DiscographyEntry, Experience, Project
@@ -167,6 +168,31 @@ def create_project(request):
     )
 
 
+@require_POST
+def create_project_ajax(request):
+    if not request.user.is_superuser:
+        return JsonResponse(
+            {"message": "Only the portfolio owner can add projects."},
+            status=403,
+        )
+
+    form = ProjectForm(request.POST)
+    if form.is_valid():
+        if not has_valid_write_secret(request, form.cleaned_data["write_secret"]):
+            return JsonResponse(
+                {"errors": {"write_secret": [{"message": "Invalid write code."}]}},
+                status=400,
+            )
+
+        project = form.save()
+        return JsonResponse(
+            {"message": "Project added successfully.", "pk": str(project.pk)},
+            status=201,
+        )
+
+    return JsonResponse({"errors": form.errors.get_json_data()}, status=400)
+
+
 @login_required(login_url="/login/")
 def update_project(request, project_id):
     require_portfolio_editor(request)
@@ -219,28 +245,44 @@ def delete_discography(request, entry_id):
 
 def get_projects_json(request):
     title_query = request.GET.get("title", "").strip()
-    projects = Project.objects.all()
+    projects = Project.objects.prefetch_related("starred_by")
     if title_query:
         projects = projects.filter(title__icontains=title_query)
-    return HttpResponse(
-        serializers.serialize("json", projects, use_natural_foreign_keys=True),
-        content_type="application/json",
-    )
+
+    data = []
+    for project in projects:
+        starred_users = project.starred_by.all()
+        data.append(
+            {
+                "pk": str(project.pk),
+                "fields": {
+                    "title": project.title,
+                    "description": project.description,
+                    "period": project.period,
+                    "organization": project.organization,
+                    "link_label": project.link_label,
+                    "link_url": project.link_url,
+                    "links": project.links,
+                    "tags": project.tags,
+                    "star_count": starred_users.count(),
+                    "is_starred": request.user.is_authenticated
+                    and starred_users.filter(pk=request.user.pk).exists(),
+                    "starred_by_names": ", ".join(user.username for user in starred_users),
+                },
+            }
+        )
+
+    return JsonResponse(data, safe=False)
 
 
 def show_projects(request):
-    json_response = get_projects_json(request)
-    projects = [
-        item.object
-        for item in serializers.deserialize("json", json_response.content.decode("utf-8"))
-    ]
     return render(
         request,
         "project.html",
         {
             "name": PROFILE_CONTEXT["name"],
-            "project_list": projects,
             "title_query": request.GET.get("title", "").strip(),
+            "form": ProjectForm(),
         },
     )
 

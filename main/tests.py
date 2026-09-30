@@ -209,19 +209,21 @@ class MainTest(TestCase):
                 },
             ],
         )
-        response = self.client.get(reverse("main:show_projects"))
+        response = self.client.get(reverse("main:get_projects_json"))
         self.assertContains(response, paralab.title)
         self.assertContains(response, "https://paralab-theta.vercel.app")
         self.assertContains(response, "https://github.com/Ini-statement-aku-yang-paling-baddie/paralab-architecture")
 
-    def test_projects_page_deserializes_json_and_filters_by_title(self):
+    def test_projects_page_is_an_ajax_shell_with_a_search_query(self):
         response = self.client.get(reverse("main:show_projects"))
 
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "project.html")
-        self.assertContains(response, self.project.title)
+        self.assertNotContains(response, self.project.title)
+        self.assertContains(response, 'id="project-grid"')
+        self.assertContains(response, reverse("main:get_projects_json"))
         filtered = self.client.get(reverse("main:show_projects"), {"title": "no match"})
-        self.assertContains(filtered, "No projects match that title.")
+        self.assertContains(filtered, 'value="no match"')
 
     @override_settings(PROJECT_WRITE_SECRET="test-write-secret")
     def test_project_json_and_delete_endpoint(self):
@@ -234,14 +236,28 @@ class MainTest(TestCase):
         project_payload = next(
             item
             for item in json.loads(response.content)
-            if item["pk"] == self.project.pk
+            if str(item["pk"]) == str(self.project.pk)
         )
-        self.assertEqual(project_payload["fields"]["starred_by"], [[self.user.username]])
+        self.assertEqual(project_payload["fields"]["starred_by_names"], self.user.username)
         self.assertNotContains(response, "member-password")
         self.client.force_login(self.admin_user)
         deleted = self.client.post(reverse("main:delete_project", args=[self.project.pk]), {"password": "test-write-secret"})
         self.assertRedirects(deleted, reverse("main:show_projects"))
         self.assertFalse(Project.objects.filter(pk=self.project.pk).exists())
+
+    def test_projects_json_includes_the_current_users_star_state(self):
+        self.project.starred_by.add(self.user)
+        self.client.force_login(self.user)
+
+        response = self.client.get(reverse("main:get_projects_json"))
+        project_payload = next(
+            item for item in response.json() if str(item["pk"]) == str(self.project.pk)
+        )
+
+        self.assertEqual(project_payload["fields"]["title"], self.project.title)
+        self.assertEqual(project_payload["fields"]["star_count"], 1)
+        self.assertTrue(project_payload["fields"]["is_starred"])
+        self.assertEqual(project_payload["fields"]["starred_by_names"], self.user.username)
 
     @override_settings(PROJECT_WRITE_SECRET="test-write-secret")
     def test_create_project_requires_the_configured_secret(self):
@@ -259,6 +275,51 @@ class MainTest(TestCase):
         self.assertTrue(Project.objects.filter(title="Protected Project").exists())
 
     @override_settings(PROJECT_WRITE_SECRET="test-write-secret")
+    def test_superuser_can_create_a_project_via_ajax(self):
+        self.client.force_login(self.admin_user)
+
+        response = self.client.post(
+            reverse("main:create_project_ajax"),
+            {
+                "title": "AJAX Project",
+                "description": "Created without reloading the Projects page.",
+                "period": "2026",
+                "organization": "Personal",
+                "link_label": "Open",
+                "link_url": "https://example.com/ajax-project",
+                "tags": "Django, Fetch API",
+                "order": 11,
+                "write_secret": "test-write-secret",
+            },
+            HTTP_ACCEPT="application/json",
+        )
+
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.json()["message"], "Project added successfully.")
+        self.assertTrue(Project.objects.filter(title="AJAX Project").exists())
+
+    def test_project_ajax_rejects_anonymous_and_regular_users(self):
+        endpoint = reverse("main:create_project_ajax")
+        payload = {
+            "title": "Unauthorized AJAX Project",
+            "description": "This must never be created.",
+            "period": "2026",
+            "organization": "Personal",
+            "link_label": "Open",
+            "link_url": "https://example.com/unauthorized",
+            "tags": "Django",
+            "order": 12,
+        }
+
+        anonymous = self.client.post(endpoint, payload, HTTP_ACCEPT="application/json")
+        self.client.force_login(self.user)
+        regular_user = self.client.post(endpoint, payload, HTTP_ACCEPT="application/json")
+
+        self.assertEqual(anonymous.status_code, 403)
+        self.assertEqual(regular_user.status_code, 403)
+        self.assertFalse(Project.objects.filter(title="Unauthorized AJAX Project").exists())
+
+    @override_settings(PROJECT_WRITE_SECRET="test-write-secret")
     def test_create_project_accepts_the_secret_request_header(self):
         self.client.force_login(self.admin_user)
         response = self.client.post(reverse("main:create_project"), {"title": "Header Project", "description": "Protected through a header.", "period": "2026", "organization": "Personal", "link_label": "Open", "link_url": "https://example.com/header", "tags": '[]', "order": 10}, HTTP_X_PROJECT_SECRET="test-write-secret")
@@ -269,6 +330,24 @@ class MainTest(TestCase):
         form = ProjectForm(data={"title": "Tag Test", "description": "Description", "period": "2026", "organization": "Personal", "link_label": "Open", "link_url": "https://example.com/tag-test", "tags": "Django, Python, Machine Learning", "order": 0, "write_secret": "unused"})
         self.assertTrue(form.is_valid(), form.errors)
         self.assertEqual(form.cleaned_data["tags"], ["Django", "Python", "Machine Learning"])
+
+    def test_project_form_rejects_a_title_that_is_only_html(self):
+        form = ProjectForm(
+            data={
+                "title": '<img src="x" onerror="alert(1)">',
+                "description": "Description",
+                "period": "2026",
+                "organization": "Personal",
+                "link_label": "Open",
+                "link_url": "https://example.com/tag-only-title",
+                "tags": "Django",
+                "order": 0,
+                "write_secret": "unused",
+            }
+        )
+
+        self.assertFalse(form.is_valid())
+        self.assertIn("Nama proyek tidak boleh hanya berisi tag HTML.", form.errors["title"])
 
     @override_settings(PROJECT_WRITE_SECRET="test-write-secret")
     def test_create_experience_with_model_form_requires_the_write_secret(self):
@@ -541,11 +620,12 @@ class MainTest(TestCase):
     def test_project_controls_match_user_permissions(self):
         anonymous_page = self.client.get(reverse("main:show_projects"))
         self.assertNotContains(anonymous_page, reverse("main:create_project"))
-        self.assertContains(anonymous_page, reverse("main:toggle_star", args=[self.project.pk]))
+        self.assertContains(anonymous_page, reverse("main:get_projects_json"))
 
         self.client.force_login(self.admin_user)
         owner_page = self.client.get(reverse("main:show_projects"))
-        self.assertContains(owner_page, reverse("main:create_project"))
+        self.assertContains(owner_page, reverse("main:create_project_ajax"))
+        self.assertContains(owner_page, "add-project-modal")
 
     @override_settings(PROJECT_WRITE_SECRET="test-write-secret")
     def test_editor_can_update_but_cannot_create_or_delete_portfolio_data(self):

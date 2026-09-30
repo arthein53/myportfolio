@@ -1,0 +1,30 @@
+<div id="add-project-modal" class="project-form-modal" popover="auto">
+  <button
+    type="button"
+    class="project-form-modal__backdrop"
+    popovertarget="add-project-modal"
+    popovertargetaction="hide"
+  ></button>
+  <div class="project-form-modal__content">
+    <button
+      type="button"
+      class="project-form-modal__close"
+      popovertarget="add-project-modal"
+      popovertargetaction="hide"
+    >×</button>
+    <h2>Add New Project</h2>
+    <form id="project-form" method="post" action="{% url 'main:create_project_ajax' %}" class="project-form">
+      {% csrf_token %}
+      {% for field in form %}
+      <div class="form-group">
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+      </div>
+      {% endfor %}
+      <div class="project-form-modal__actions">
+        <button type="button" class="button button-secondary" popovertarget="add-project-modal" popovertargetaction="hide">Cancel</button>
+        <button type="submit" class="button">Add project</button>
+      </div>
+    </form>
+  </div>
+</div>

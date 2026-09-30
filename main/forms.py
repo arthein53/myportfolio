@@ -1,5 +1,7 @@
 from django import forms
+from django.core.exceptions import ValidationError
 from django.forms import ModelForm, NumberInput, PasswordInput, TextInput, Textarea, URLInput
+from django.utils.html import strip_tags
 
 from main.models import DiscographyEntry, Experience, Project
 
@@ -114,4 +116,26 @@ class ProjectForm(ModelForm):
             self.initial["tags"] = ", ".join(self.instance.tags)
 
     def clean_tags(self):
-        return [tag.strip() for tag in self.cleaned_data["tags"].split(",") if tag.strip()]
+        return [
+            strip_tags(tag).strip()
+            for tag in self.cleaned_data["tags"].split(",")
+            if strip_tags(tag).strip()
+        ]
+
+    def clean_title(self):
+        title = strip_tags(self.cleaned_data["title"]).strip()
+        if not title:
+            raise ValidationError("Nama proyek tidak boleh hanya berisi tag HTML.")
+        return title
+
+    def clean_description(self):
+        return strip_tags(self.cleaned_data["description"]).strip()
+
+    def clean_period(self):
+        return strip_tags(self.cleaned_data["period"]).strip()
+
+    def clean_organization(self):
+        return strip_tags(self.cleaned_data["organization"]).strip()
+
+    def clean_link_label(self):
+        return strip_tags(self.cleaned_data["link_label"]).strip()

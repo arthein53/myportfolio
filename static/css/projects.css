@@ -3,6 +3,10 @@
   margin-top: 1rem;
 }
 
+.hide {
+  display: none !important;
+}
+
 .project-add-button {
   flex: 0 0 auto;
 }
@@ -48,6 +52,76 @@
 
 .project-delete-modal__actions form {
   margin: 0;
+}
+
+.project-form-modal {
+  position: fixed;
+  z-index: 10;
+  inset: 0;
+  display: none;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 1rem;
+  border: 0;
+  background: transparent;
+}
+
+.project-form-modal:popover-open {
+  display: flex;
+}
+
+.project-form-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: rgba(28, 25, 23, 0.58);
+  cursor: default;
+}
+
+.project-form-modal__content {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 40rem);
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+  padding: 1.5rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+  box-shadow: 0 1rem 3rem rgba(28, 25, 23, 0.22);
+}
+
+.project-form-modal__content h2 {
+  margin: 0 2.5rem 1.25rem 0;
+  font-size: 1.5rem;
+}
+
+.project-form-modal__close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  padding: 0;
+  border: 0;
+  color: var(--text-muted);
+  background: transparent;
+  font-size: 1.8rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.project-form-modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
 }
 
 .projects-list {
@@ -189,5 +263,25 @@
   .project-add-button {
     width: 100%;
     justify-content: center;
+  }
+
+  .project-form-modal {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .project-form-modal__content {
+    width: 100%;
+    max-height: 90vh;
+    padding: 1.25rem;
+    border-radius: var(--radius) var(--radius) 0 0;
+  }
+
+  .project-form-modal__actions {
+    flex-direction: column-reverse;
+  }
+
+  .project-form-modal__actions .button {
+    width: 100%;
   }
 }
