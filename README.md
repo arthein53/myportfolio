@@ -79,6 +79,7 @@ Detail section yang dibantu AI:
 2. View, URL, template create/update, tombol delete, serta endpoint JSON untuk Experience.
 3. Test Django untuk create, update, delete, JSON, dan deserialisasi Experience.
 
+
 ## TUGAS 4
 
 ### AI DISCLOSURE
@@ -89,3 +90,22 @@ Detail section yang dibantu AI:
 2. Penambahan fitur star pada Project, Experience, dan Discography menggunakan relasi ManyToManyField.
 3. Pembuatan migration, view toggle star, template button star, dan perbaikan agar star dapat diperbarui tanpa reload halaman.
 4. Penambahan dan pengecekan test untuk role, authorization, star, serta respons JSON asynchronous.
+
+
+## TUGAS 5
+
+### JAWABAN PERTANYAAN REFLEKTIF
+1. Debouncing adalah suatu teknik untuk menunda pemanggilan fungsi sampai user berhenti menginput selama beberapa waktu. Pada fitur pencarian AJAX, teknik ini penting diterapkan agar aplikasi tidak mengirim request ke server setiap kali user mengetik satu karakter. Tanpa debouncing, banyak request dapat dikirim dalam waktu bersamaan sehingga server bekerja lebih berat dan hasil pencarian berubah terlalu cepat. Dengan adanya debouncing, request hanya akan dikirim setelah user selesai atau berhenti mengetik.
+
+2. Await digunakan untuk menunggu proses asynchronous seperti fetch() agar selesai dulu sebelum kode di bawahnya dijalankan. Dengan await, kita bisa memastikan response dari server sudah diterima sebelum data diproses, misalnya dengan response.json(). Jika tidak menggunakan await, kode di bawahnya dapat berjalan lebih dulu sebelum data dari server tersedia. Akibatnya, program akan mencoba memproses data yang belum selesai dimuat dan menyebabkan hasil tidak sesuai atau error.
+
+3. XSS (Cross-Site Scripting) adalah serangan ketika attacker memasukkan kode JavaScript berbahaya ke dalam data yang lalu ditampilkan pada halaman web. Jika kode tersebut dijalankan oleh browser user lain, attacker bisa mencuri data, mengambil cookie, atau mengubah tampilan halaman. Data dari AJAX atau JavaScript lebih rentan terkena jika ditampilkan menggunakan innerHTML, karena browser dapat menganggap isi data tersebut sebagai kode HTML atau JavaScript. Template Django biasanya memiliki auto escaping yang bisa mengubah karakter berbahaya menjadi teks, sehingga lebih aman daripada menampilkan data secara langsung melalui JavaScript.
+
+### AI DISCLOSURE
+Dalam pengerjaan Tugas 5 saya menggunakan GPT-5.6-terra untuk memeriksa struktur aplikasi Django yang sudah ada, mengimplementasikan fitur, serta menjalankan dan memperbaiki test. AI digunakan untuk membantu proses pengembangan, sementara perubahan tetap dicek sesuai requirement tugas dan intensi saya
+
+Detail section yang dibantu AI:
+1. Memahami alur pengambilan dan pembaruan data secara asynchronous.
+2. Meninjau penerapan form modal, validasi respons, dan feedback pengguna.
+3. Mengecek pengamanan input serta penanganan error pada fitur yang dibuat.
+4. Membantu menyusun dan menjalankan pengujian fitur.
