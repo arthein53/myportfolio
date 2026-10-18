@@ -72,7 +72,7 @@ Detail section yang dibantu AI:
 3. Saat endpoint JSON portfolio diakses, URL di main/urls.py meneruskan request ke view get_experiences_json(). View mengambil queryset Experience dari database, lalu serializers.serialize("json", ...) mengubah setiap instance model menjadi data JSON yang dapat dikirim dalam HttpResponse dengan content type application/json. Halaman experience memanggil endpoint view tersebut, membaca content JSON, lalu serializers.deserialize() mereturn menjadi instance Experience sebelum data dirender template. Serialization diperlukan karena object model Django berisi tipe Python dan metadata internal yang tidak dapat dikirim langsung sebagai respons HTTP JSON.
 
 ### AI DISCLOSURE
-Dalam pengerjaan Tugas 3 saya menggunakan GPT-5.6-terra untuk membantu meninjau requirement, merancang test Django terlebih dahulu, dan mengajarkan pengimplementasian CRUD Experience serta endpoint JSON. Saya memeriksa struktur model, URL, view, dan template yang sudah ada sebelum perubahan dilakukan.
+Dalam pengerjaan Tugas 3 saya menggunakan GPT-5.6-terra untuk membantu meninjau requirement, merancang test Django terlebih dahulu, dan mengajarkan pengimplementasian CRUD Experience serta endpoint JSON. Saya memeriksa struktur model, URL, view, dan template yang sudSignatureah ada sebelum perubahan dilakukan.
 
 Detail section yang dibantu AI:
 1. Penambahan ExperienceForm dan validasi write code.

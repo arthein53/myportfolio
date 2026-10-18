@@ -1,0 +1,222 @@
+/* Shared project and discography archive lists */
+.projects-list,
+.discography-list {
+  margin: 2.5rem 0 0;
+  padding: 0;
+  border-top: 1px solid var(--line);
+  list-style: none;
+}
+
+.projects-list > li,
+.discography-list > li {
+  position: relative;
+  border-bottom: 1px solid var(--line);
+  background-color: var(--paper);
+  transition: background-color var(--transition-base);
+}
+
+.projects-list > li:nth-child(even),
+.discography-list > li:nth-child(even) {
+  background-color: var(--hero-background);
+}
+
+.projects-list > li::before,
+.discography-list > li::after {
+  position: absolute;
+  width: var(--list-accent-width);
+  content: "";
+  background-color: var(--accent);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform var(--transition-base);
+}
+
+.projects-list > li::before {
+  inset: 0 auto 0 0;
+}
+
+.discography-list > li::after {
+  inset: 0 0 0 auto;
+}
+
+.projects-list > li:hover::before,
+.projects-list > li:focus-within::before,
+.discography-list > li:hover::after,
+.discography-list > li:focus-within::after,
+.discography-list > li:has(.discography-item.is-player-open)::after {
+  transform: scaleY(1);
+}
+
+.project,
+.discography-item {
+  display: grid;
+  gap: var(--content-list-gap);
+  align-items: start;
+  padding: var(--content-list-padding);
+}
+
+.project {
+  grid-template-columns: 3rem minmax(0, 1fr) minmax(10rem, 14rem);
+}
+
+.discography-item {
+  grid-template-columns: minmax(10rem, 14rem) minmax(0, 1fr) 3rem;
+  text-align: right;
+  cursor: pointer;
+}
+
+.discography-item:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: -4px;
+}
+
+.project-number,
+.project-meta,
+.discography-meta {
+  color: var(--text-muted);
+}
+
+.project-number,
+.discography-number {
+  display: grid;
+  width: 3rem;
+  height: 3rem;
+  place-items: center;
+  margin: 0;
+  color: var(--paper);
+  background-color: var(--accent);
+  font-size: 0.8rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.08em;
+}
+
+.project-number {
+  box-shadow: 4px 4px 0 var(--ink);
+}
+
+.discography-number {
+  box-shadow: -4px 4px 0 var(--ink);
+}
+
+.project-content > :is(h2, h3),
+.discography-content > :is(h2, h3) {
+  margin: 0;
+  color: var(--ink);
+  font: inherit;
+  font-size: clamp(1.4rem, 2.6vw, 2rem);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 1.3;
+  transition:
+    color var(--transition-base),
+    transform var(--transition-base);
+}
+
+.projects-list > li:hover .project-content > :is(h2, h3),
+.projects-list > li:focus-within .project-content > :is(h2, h3) {
+  color: var(--accent-dark);
+  transform: translateX(0.35rem);
+}
+
+.discography-list > li:hover .discography-content > :is(h2, h3),
+.discography-list > li:focus-within .discography-content > :is(h2, h3) {
+  color: var(--accent-dark);
+  transform: translateX(-0.35rem);
+}
+
+.project-content > p,
+.discography-content > p {
+  max-width: 42rem;
+  margin: 0.9rem 0 0;
+  color: var(--text-muted);
+}
+
+.discography-content > p {
+  margin-left: auto;
+}
+
+.project-meta,
+.discography-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.discography-meta {
+  align-items: flex-end;
+}
+
+.project-meta > a,
+.discography-meta > a {
+  width: fit-content;
+  margin-top: 0.7rem;
+  color: var(--accent-dark);
+  text-underline-offset: 0.25em;
+}
+
+.project-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0 0;
+  padding: 0;
+  color: var(--accent-dark);
+  font-size: 0.78rem;
+  list-style: none;
+}
+
+.project-tags > li {
+  padding: 0.25rem 0.45rem;
+  border: 1px solid var(--line);
+  border-radius: 0.25rem;
+  background-color: var(--surface-raised);
+}
+
+.discography-content .project-tags {
+  justify-content: flex-end;
+}
+
+.discography-player[hidden] {
+  display: none;
+}
+
+.discography-player {
+  display: grid;
+  justify-items: center;
+  padding: 0 1.5rem 2.25rem;
+}
+
+.discography-player audio {
+  width: min(100%, 34rem);
+  height: 2.5rem;
+  accent-color: var(--accent);
+}
+
+@media (max-width: 600px) {
+  .project,
+  .discography-item {
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+    padding: 1.5rem 1rem;
+  }
+
+  .project-meta,
+  .discography-meta {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+  }
+
+  .discography-meta {
+    justify-content: flex-end;
+  }
+
+  .project-meta > a,
+  .discography-meta > a {
+    flex-basis: 100%;
+    margin-top: 0.25rem;
+  }
+}

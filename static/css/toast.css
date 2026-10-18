@@ -43,6 +43,6 @@
 }
 
 /* Modifikasi border kiri berdasarkan tipe notifikasi */
-.toast-success { border-left: 4px solid #22c55e; }
-.toast-error { border-left: 4px solid #b42318; }
+.toast-success { border-left: 4px solid var(--success); }
+.toast-error { border-left: 4px solid var(--danger); }
 .toast-normal { border-left: 4px solid var(--accent); }

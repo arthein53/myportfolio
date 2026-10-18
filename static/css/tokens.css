@@ -20,9 +20,17 @@
   --surface-raised: #232632;
   --geometry-plane: #2a253b;
   --geometry-shadow: rgba(0, 0, 0, 0.24);
+  --danger: #b33d4a;
+  --danger-strong: #d9535f;
+  --success: #22c55e;
+  --overlay: rgba(28, 25, 23, 0.58);
 
   --focus: #9b7be1;
   --radius: 0.5rem;
+  --transition-base: 180ms ease;
+  --list-accent-width: 0.35rem;
+  --content-list-gap: 2rem;
+  --content-list-padding: 2.25rem 1.5rem;
 }
 
 :root[data-theme="light"] {
@@ -38,6 +46,5 @@
   --surface-raised: #eeebf8;
   --geometry-plane: #faf9ff;
   --geometry-shadow: rgba(64, 57, 87, 0.13);
-
   --focus: #6d55c8;
 }
