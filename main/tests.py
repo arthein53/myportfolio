@@ -221,7 +221,7 @@ class MainTest(TestCase):
         self.assertTemplateUsed(response, "project.html")
         self.assertNotContains(response, self.project.title)
         self.assertContains(response, 'id="project-grid"')
-        self.assertContains(response, reverse("main:get_projects_json"))
+        self.assertContains(response, reverse("api:project-list"))
         filtered = self.client.get(reverse("main:show_projects"), {"title": "no match"})
         self.assertContains(filtered, 'value="no match"')
 
@@ -620,11 +620,11 @@ class MainTest(TestCase):
     def test_project_controls_match_user_permissions(self):
         anonymous_page = self.client.get(reverse("main:show_projects"))
         self.assertNotContains(anonymous_page, reverse("main:create_project"))
-        self.assertContains(anonymous_page, reverse("main:get_projects_json"))
+        self.assertContains(anonymous_page, reverse("api:project-list"))
 
         self.client.force_login(self.admin_user)
         owner_page = self.client.get(reverse("main:show_projects"))
-        self.assertContains(owner_page, reverse("main:create_project_ajax"))
+        self.assertContains(owner_page, reverse("api:project-list"))
         self.assertContains(owner_page, "add-project-modal")
 
     @override_settings(PROJECT_WRITE_SECRET="test-write-secret")

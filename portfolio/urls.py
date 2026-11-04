@@ -23,4 +23,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('audio/<str:filename>', audio_file, name='audio_file'),
     path('', include('main.urls')),
+    path('api/v1/', include('main.api_urls')),
+    path('api-auth/', include('rest_framework.urls')),
 ]

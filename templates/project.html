@@ -6,11 +6,12 @@
   <section
     class="content-page projects-page"
     data-projects-page
-    data-projects-endpoint="{% url 'main:get_projects_json' %}"
-    data-create-project-endpoint="{% url 'main:create_project_ajax' %}"
-    data-star-url-template="{% url 'main:toggle_star' 0 %}"
+    data-projects-endpoint="{% url 'api:project-list' %}"
+    data-project-detail-template="{% url 'api:project-detail' 0 %}"
+    data-star-url-template="{% url 'api:project-star' 0 %}"
     data-csrf-token="{{ csrf_token }}"
     data-is-superuser="{{ user.is_superuser|yesno:'true,false' }}"
+    data-is-authenticated="{{ user.is_authenticated|yesno:'true,false' }}"
   >
     <div class="container">
       <div class="content-page-header">
@@ -45,6 +46,7 @@
 {% if user.is_superuser %}
 {% include "components/project_form_modal.html" %}
 {% endif %}
+{% csrf_token %}
 {% endblock content %}
 
 {% block scripts %}
