@@ -139,6 +139,30 @@
   font-weight: 600;
 }
 
+.experience-add-button {
+  flex: 0 0 auto;
+}
+
+.experience-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  margin-top: 0.85rem;
+}
+
+.experience-actions .button {
+  min-height: 2.35rem;
+  margin-left: auto;
+  padding: 0.45rem 0.7rem;
+  font-size: 0.78rem;
+}
+
+.experience-actions .button + .button {
+  margin-left: 0;
+}
+
 .empty-state {
   grid-column: 1 / -1;
   padding: 2rem 1.5rem;
@@ -152,6 +176,11 @@
 }
 
 @media (max-width: 600px) {
+  .experience-add-button {
+    width: 100%;
+    justify-content: center;
+  }
+
   .experience-grid {
     grid-template-columns: 1fr;
   }

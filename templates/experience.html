@@ -1,73 +1,51 @@
-{% extends 'base.html' %} {% load static %} {% block content %}
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+{% get_static_prefix as static_prefix %}
 <main>
-  <section class="content-page experience-page" id="experience">
+  <section
+    class="content-page experience-page"
+    id="experience"
+    data-experiences-page
+    data-experiences-endpoint="{% url 'api:experience-list' %}"
+    data-experience-detail-template="{% url 'api:experience-detail' '00000000-0000-0000-0000-000000000000' %}"
+    data-star-url-template="{% url 'api:experience-star' '00000000-0000-0000-0000-000000000000' %}"
+    data-static-url="{{ static_prefix }}"
+    data-csrf-token="{{ csrf_token }}"
+    data-is-superuser="{{ user.is_superuser|yesno:'true,false' }}"
+    data-can-edit="{{ can_edit_experience|yesno:'true,false' }}"
+    data-is-authenticated="{{ user.is_authenticated|yesno:'true,false' }}"
+  >
     <div class="container">
       <div class="content-page-header">
         <div>
           <p class="section-kicker">My journey</p>
           <h1 class="content-page-title">Experience</h1>
         </div>
+        {% if user.is_superuser %}
+        <button type="button" class="button experience-add-button" popovertarget="experience-form-modal">Add experience <span>+</span></button>
+        {% endif %}
       </div>
-      {% if messages %}{% for message in messages %}
-      <p class="page-message">{{ message }}</p>
-      {% endfor %}{% endif %}
-      <form class="content-page-search" method="get" action="{% url 'main:show_experience' %}">
+      <form id="experience-search-form" class="content-page-search">
         <div class="content-page-search-field">
           <label for="experience-search">Search experience by title</label>
           <input id="experience-search" type="search" name="title" value="{{ title_query }}" placeholder="Type an experience title">
         </div>
         <button class="button" type="submit">Search experience</button>
       </form>
-
-      <div class="experience-grid">
-        {% for experience in experience_list %}
-        <article class="experience-card" id="experience-{{ experience.pk }}">
-          {% if experience.thumbnail %}
-          {% if experience.thumbnail|slice:":4" == "http" %}
-          <img
-            class="experience-thumbnail"
-            src="{{ experience.thumbnail }}"
-            alt="Thumbnail for {{ experience.organization|default:experience.title }}"
-            loading="lazy"
-          />
-          {% else %}
-          <img
-            class="experience-thumbnail"
-            src="{% static experience.thumbnail %}"
-            alt="Thumbnail for {{ experience.organization|default:experience.title }}"
-            loading="lazy"
-          />
-          {% endif %}
-          {% else %}
-          <div class="experience-thumbnail experience-thumbnail-placeholder">
-            <span>Experience</span>
-          </div>
-          {% endif %}
-          <div class="experience-card-content">
-            <span class="experience-category">
-              {{ experience.get_category_display }}
-            </span>
-            <h2>{{ experience.organization|default:experience.title }}</h2>
-            {% if experience.position %}
-            <p class="experience-position">{{ experience.position }}</p>
-            {% endif %} {% if experience.period %}
-            <p class="experience-period">{{ experience.period }}</p>
-            {% endif %}
-            <p class="experience-description">{{ experience.description }}</p>
-
-            {% if experience.is_ongoing %}
-            <p class="experience-status">Ongoing</p>
-            {% else %}
-            <p class="experience-status">Finished</p>
-            {% endif %}
-            {% include "components/experience_star.html" with experience=experience %}
-          </div>
-        </article>
-        {% empty %}
-        <p class="empty-state">{% if title_query %}No experience matches that title.{% else %}No experience added yet.{% endif %}</p>
-        {% endfor %}
-      </div>
+      <div id="experiences-loading" class="empty-state hide"><p>Loading experiences...</p></div>
+      <div id="experiences-error" class="empty-state hide"><p>Could not load experiences. Please try again.</p></div>
+      <div id="experiences-empty" class="empty-state hide"><p>No experience matches that title.</p></div>
+      <div id="experience-grid" class="experience-grid hide"></div>
     </div>
   </section>
 </main>
+{% if can_edit_experience %}{% include "components/experience_form_modal.html" %}{% endif %}
+{% if user.is_superuser %}{% include "components/experience_delete_modal.html" %}{% endif %}
+{% csrf_token %}
 {% endblock content %}
+
+{% block scripts %}
+<script src="{% static 'js/experiences.js' %}" defer></script>
+{% endblock scripts %}

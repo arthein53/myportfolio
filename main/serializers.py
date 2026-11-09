@@ -1,7 +1,7 @@
 from django.utils.html import strip_tags
 from rest_framework import serializers
 
-from main.models import Project
+from main.models import Experience, Project
 
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -93,3 +93,101 @@ class ProjectSerializer(serializers.ModelSerializer):
 
     def get_starred_by_names(self, obj):
         return ", ".join(user.username for user in obj.starred_by.all())
+
+
+class ExperienceSerializer(serializers.ModelSerializer):
+    EDITABLE_FIELDS = (
+        "title",
+        "organization",
+        "position",
+        "period",
+        "description",
+        "category",
+        "thumbnail",
+        "ended_at",
+    )
+    category_display = serializers.CharField(source="get_category_display", read_only=True)
+    is_ongoing = serializers.BooleanField(read_only=True)
+    star_count = serializers.SerializerMethodField()
+    is_starred = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Experience
+        fields = [
+            "id",
+            "title",
+            "organization",
+            "position",
+            "period",
+            "description",
+            "category",
+            "category_display",
+            "thumbnail",
+            "started_at",
+            "ended_at",
+            "is_ongoing",
+            "star_count",
+            "is_starred",
+        ]
+        read_only_fields = [
+            "id",
+            "category_display",
+            "started_at",
+            "is_ongoing",
+            "star_count",
+            "is_starred",
+        ]
+
+    def _validate_text(self, value, field_name, *, required=False):
+        cleaned_value = strip_tags(value).strip()
+        if required and not cleaned_value:
+            raise serializers.ValidationError(f"{field_name} cannot be empty.")
+        return cleaned_value
+
+    def validate_title(self, value):
+        return self._validate_text(value, "Title", required=True)
+
+    def validate_organization(self, value):
+        return self._validate_text(value, "Organization")
+
+    def validate_position(self, value):
+        return self._validate_text(value, "Position")
+
+    def validate_period(self, value):
+        return self._validate_text(value, "Period")
+
+    def validate_description(self, value):
+        return self._validate_text(value, "Description", required=True)
+
+    def validate_thumbnail(self, value):
+        return self._validate_text(value, "Thumbnail")
+
+    def validate(self, attrs):
+        if self.instance is not None and not self.partial:
+            missing_fields = [
+                field_name
+                for field_name in self.EDITABLE_FIELDS
+                if field_name not in self.initial_data
+            ]
+            if missing_fields:
+                raise serializers.ValidationError(
+                    {
+                        "non_field_errors": [
+                            "PUT requires every editable field: "
+                            + ", ".join(self.EDITABLE_FIELDS)
+                            + "."
+                        ]
+                    }
+                )
+        return attrs
+
+    def get_star_count(self, obj):
+        return obj.starred_by.count()
+
+    def get_is_starred(self, obj):
+        request = self.context.get("request")
+        return bool(
+            request
+            and request.user.is_authenticated
+            and obj.starred_by.filter(pk=request.user.pk).exists()
+        )

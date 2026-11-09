@@ -1,6 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from django.forms import ModelForm, NumberInput, PasswordInput, TextInput, Textarea, URLInput
+from django.forms import DateTimeInput, ModelForm, NumberInput, PasswordInput, TextInput, Textarea, URLInput
 from django.utils.html import strip_tags
 
 from main.models import DiscographyEntry, Experience, Project
@@ -24,6 +24,7 @@ class ExperienceForm(ModelForm):
             "description",
             "category",
             "thumbnail",
+            "ended_at",
         ]
         labels = {
             "title": "Experience title",
@@ -33,6 +34,7 @@ class ExperienceForm(ModelForm):
             "description": "Description",
             "category": "Category",
             "thumbnail": "Thumbnail URL or static path",
+            "ended_at": "End date and time",
         }
         widgets = {
             "title": TextInput(attrs={"placeholder": "Teaching Assistant"}),
@@ -41,6 +43,10 @@ class ExperienceForm(ModelForm):
             "period": TextInput(attrs={"placeholder": "Sep 2026 - Jan 2027"}),
             "description": Textarea(attrs={"placeholder": "Describe your role and contribution", "rows": 4}),
             "thumbnail": TextInput(attrs={"placeholder": "img/experience/organization/thumbnail.jpg"}),
+            "ended_at": DateTimeInput(
+                format="%Y-%m-%dT%H:%M",
+                attrs={"type": "datetime-local"},
+            ),
         }
         help_texts = {
             "thumbnail": "Use a landscape image with a 4:3 ratio, such as 1200 × 900 px. Other ratios will be cropped to fit the card.",

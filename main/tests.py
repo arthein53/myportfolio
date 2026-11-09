@@ -144,8 +144,14 @@ class MainTest(TestCase):
         )
 
         self.assertEqual(mercor.thumbnail, "img/experience/mercor/mercor-thumbnail.png")
-        response = self.client.get(reverse("main:show_experience"))
-        self.assertContains(response, "/static/img/experience/mercor/mercor-thumbnail.png")
+        response = self.client.get(reverse("api:experience-list"))
+        mercor_payload = next(
+            item for item in response.json() if item["id"] == str(mercor.pk)
+        )
+        self.assertEqual(
+            mercor_payload["thumbnail"],
+            "img/experience/mercor/mercor-thumbnail.png",
+        )
 
     def test_experience_model(self):
         self.assertEqual(str(self.experience), "Asisten Dosen PBP")
@@ -157,13 +163,10 @@ class MainTest(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "experience.html")
-        self.assertContains(response, self.experience.title)
-        self.assertContains(response, self.experience.description)
-        self.assertContains(response, self.experience.thumbnail)
-        self.assertContains(response, "Part-Time")
-        self.assertContains(response, "Ongoing")
-        self.assertContains(response, reverse("main:toggle_experience_star", args=[self.experience.pk]))
-        self.assertNotContains(response, "components/experience_star.html")
+        self.assertNotContains(response, self.experience.title)
+        self.assertContains(response, 'id="experience-grid"')
+        self.assertContains(response, reverse("api:experience-list"))
+        self.assertContains(response, "js/experiences.")
         self.assertContains(response, f'href="{reverse("main:show_main")}"')
         self.assertContains(response, f'href="{reverse("main:show_main")}#skills"')
         self.assertContains(response, f'href="{reverse("main:show_projects")}"')
@@ -174,24 +177,26 @@ class MainTest(TestCase):
         filtered = self.client.get(reverse("main:show_experience"), {"title": "no match"})
 
         self.assertContains(response, "Search experience by title")
-        self.assertContains(response, self.experience.title)
-        self.assertContains(filtered, "No experience matches that title.")
+        self.assertContains(filtered, 'value="no match"')
+        api_response = self.client.get(reverse("api:experience-list"), {"title": "no match"})
+        self.assertEqual(api_response.json(), [])
 
     def test_empty_experience_page(self):
         Experience.objects.all().delete()
-        response = self.client.get(reverse("main:show_experience"))
+        response = self.client.get(reverse("api:experience-list"))
 
-        self.assertContains(response, "No experience added yet.")
+        self.assertEqual(response.json(), [])
 
     def test_completed_experience(self):
         Experience.objects.exclude(pk=self.experience.pk).delete()
         self.experience.ended_at = timezone.now()
         self.experience.save()
-        response = self.client.get(reverse("main:show_experience"))
+        response = self.client.get(
+            reverse("api:experience-detail", args=[self.experience.pk])
+        )
 
         self.assertFalse(self.experience.is_ongoing)
-        self.assertContains(response, "Finished")
-        self.assertNotContains(response, "Ongoing")
+        self.assertFalse(response.json()["is_ongoing"])
 
     def test_paralab_project_has_verified_public_links(self):
         call_command("seed_portfolio", verbosity=0)
@@ -405,7 +410,8 @@ class MainTest(TestCase):
         self.assertContains(json_response, self.experience.title)
 
         page_response = self.client.get(reverse("main:show_experience"))
-        self.assertContains(page_response, self.experience.title)
+        self.assertNotContains(page_response, self.experience.title)
+        self.assertContains(page_response, reverse("api:experience-list"))
         self.assertNotContains(page_response, reverse("main:update_experience", args=[self.experience.pk]))
 
         self.client.force_login(self.admin_user)

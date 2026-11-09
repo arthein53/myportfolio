@@ -109,3 +109,25 @@ Detail section yang dibantu AI:
 2. Meninjau penerapan form modal, validasi respons, dan feedback pengguna.
 3. Mengecek pengamanan input serta penanganan error pada fitur yang dibuat.
 4. Membantu menyusun dan menjalankan pengujian fitur.
+
+
+## Tugas 6
+
+### JAWABAN PERTANYAAN REFLEKTIF
+1. REST atau Representational State Transfer adalah arsitektur API yang memperlakukan data sebagai resource dengan URL yang konsisten, memakai metode HTTP sesuai tujuan, stateless, dan mengembalikan status HTTP. Respons JSON saja belum cukup disebut RESTful karena endpoint tetap harus mengikuti kontrak resource dan semantik HTTP tersebut. PUT digunakan untuk mengganti representasi resource secara lengkap, misalnya mengganti seluruh data sebuah Experience. PATCH digunakan untuk update sebagian, misalnya hanya mengubah `position` tanpa mengirim ulang `description` dan field lainnya.
+
+2. Serializer pada Django REST Framework mengubah instance model menjadi data Python yang dapat dirender sebagai JSON, sekaligus memvalidasi dan mengubah input API menjadi data model yang aman disimpan. Dibandingkan membuat dictionary manual dengan `JsonResponse`, `ModelSerializer` mengurangi duplikasi, menggunakan validasi field model, menyediakan pesan error terstruktur, mendukung create/update, dan menjaga bentuk respons list serta detail tetap konsisten.
+
+3. Autentikasi menentukan siapa pengguna yang mengirim request, sedangkan otorisasi menentukan tindakan apa yang boleh dilakukan pengguna tersebut. Pada proyek ini SessionAuthentication mengenali akun login, lalu permission class membatasi Guest, User, Editor, dan Superuser. Pemeriksaan harus dilakukan di server karena tombol yang disembunyikan di template hanya mengubah tampilan. Pengguna tetap dapat mengirim request langsung melalui browser developer tools, curl, atau client API.
+
+4. SessionAuthentication memakai cookie session yang otomatis dikirim browser. Tanpa CSRF token, situs lain dapat mencoba mengirim request perubahan menggunakan sesi pengguna yang masih aktif. Karena itu POST, PUT, PATCH, dan DELETE tetap memerlukan `X-CSRFToken`. `force_authenticate` tidak cukup untuk menguji CSRF karena metode tersebut memasang pengguna langsung pada request test dan melewati alur login berbasis session serta pemeriksaan CSRF. Test CSRF perlu memakai `APIClient(enforce_csrf_checks=True)`, `.login()`, dan request session tanpa token.
+
+### AI DISCLOSURE
+Dalam pengerjaan Tugas 6 saya menggunakan Hermes Agent dengan model GPT-5.6 untuk membantu memahami penerapan Django REST Framework, mereview struktur aplikasi yang sudah ada, serta menemukan bagian yang masih belum sesuai dengan requirement. AI digunakan sebagai pendamping dalam proses pengembangan dan debugging, sedangkan hasil akhirnya tetap diperiksa melalui test dan eksekusi proyek secara langsung.
+
+Detail section yang dibantu AI:
+1. Memahami hubungan antara serializer, permission class, API view, dan endpoint pada Django REST Framework.
+2. Review pembagian hak akses Guest, User, Editor, dan Superuser pada API Experience.
+3. Membantu mengecek integrasi pencarian, form, star, edit, dan delete secara asynchronous tanpa reload halaman.
+4. Review validasi input, penggunaan CSRF token, dan penanganan error dari API.
+5. Membantu menyusun serta menjalankan test untuk role, star, validasi serializer, PUT/PATCH, dan CSRF.

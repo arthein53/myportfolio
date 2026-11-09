@@ -1,0 +1,21 @@
+<div id="experience-form-modal" class="project-form-modal" popover="auto">
+  <button type="button" class="project-form-modal__backdrop" popovertarget="experience-form-modal" popovertargetaction="hide"></button>
+  <div class="project-form-modal__content">
+    <button type="button" class="project-form-modal__close" popovertarget="experience-form-modal" popovertargetaction="hide">×</button>
+    <h2 id="experience-form-title">Add experience</h2>
+    <form id="experience-form" class="project-form">
+      {% csrf_token %}
+      {% for field in form %}
+      <div class="form-group{% if field.name == 'write_secret' %} experience-write-secret{% endif %}">
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+        {% if field.help_text %}<p class="form-help">{{ field.help_text }}</p>{% endif %}
+      </div>
+      {% endfor %}
+      <div class="project-form-modal__actions">
+        <button type="button" class="button button-secondary" popovertarget="experience-form-modal" popovertargetaction="hide">Cancel</button>
+        <button id="experience-form-submit" type="submit" class="button">Add experience</button>
+      </div>
+    </form>
+  </div>
+</div>

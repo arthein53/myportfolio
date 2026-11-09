@@ -1,0 +1,19 @@
+<div id="experience-delete-modal" class="project-form-modal" popover="auto">
+  <button type="button" class="project-form-modal__backdrop" popovertarget="experience-delete-modal" popovertargetaction="hide"></button>
+  <div class="project-form-modal__content experience-delete-modal__content">
+    <button type="button" class="project-form-modal__close" popovertarget="experience-delete-modal" popovertargetaction="hide">×</button>
+    <h2>Delete experience</h2>
+    <p>This permanently removes the selected experience.</p>
+    <form id="experience-delete-form" class="project-form">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="experience-delete-secret">Portfolio write code</label>
+        <input id="experience-delete-secret" name="write_secret" type="password" autocomplete="current-password" required>
+      </div>
+      <div class="project-form-modal__actions">
+        <button type="button" class="button button-secondary" popovertarget="experience-delete-modal" popovertargetaction="hide">Cancel</button>
+        <button type="submit" class="button button-danger">Delete experience</button>
+      </div>
+    </form>
+  </div>
+</div>

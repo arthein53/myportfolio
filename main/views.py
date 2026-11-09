@@ -62,18 +62,15 @@ def get_experiences_json(request):
 
 
 def show_experience(request):
-    json_response = get_experiences_json(request)
-    experiences = [
-        item.object
-        for item in serializers.deserialize("json", json_response.content.decode("utf-8"))
-    ]
     return render(
         request,
         "experience.html",
         {
             "name": PROFILE_CONTEXT["name"],
-            "experience_list": experiences,
             "title_query": request.GET.get("title", "").strip(),
+            "form": ExperienceForm(),
+            "can_edit_experience": request.user.is_superuser
+            or is_portfolio_editor(request.user),
         },
     )
 
