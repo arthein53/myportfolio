@@ -1,5 +1,6 @@
 from django.urls import path
 
+from main import mobile_auth
 from main.views import (
     create_experience,
     create_project,
@@ -52,4 +53,7 @@ urlpatterns = [
     path("register/", register, name="register"),
     path("login/", login_user, name="login"),
     path("logout/", logout_user, name="logout"),
+    path("auth/register/", mobile_auth.register, name="mobile-register"),
+    path("auth/login/", mobile_auth.login, name="mobile-login"),
+    path("auth/logout/", mobile_auth.logout, name="mobile-logout"),
 ]

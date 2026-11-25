@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/6.1/ref/settings/
 
 from pathlib import Path
 import os
+from corsheaders.defaults import default_headers
 from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
 # Load environment variables from .env file
@@ -22,6 +23,19 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'rafael-arlen-myportfolio.pws.cs.ui.a
 
 PRODUCTION = os.getenv('PRODUCTION', 'False').lower() == 'true'
 PROJECT_WRITE_SECRET = os.getenv('PROJECT_WRITE_SECRET', '')
+
+if not PRODUCTION:
+    ALLOWED_HOSTS.append('10.0.2.2')
+
+_default_mobile_origin = '' if PRODUCTION else 'http://localhost:3000'
+CORS_ALLOWED_ORIGINS = [
+    origin.strip()
+    for origin in os.getenv('MOBILE_ALLOWED_ORIGINS', _default_mobile_origin).split(',')
+    if origin.strip()
+]
+CORS_ALLOW_CREDENTIALS = False
+CORS_ALLOW_HEADERS = (*default_headers, 'x-project-secret')
+CORS_URLS_REGEX = r'^/(?:auth/(?:register|login|logout)/|api/v1/projects/(?:[0-9]+/)?)$'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -67,10 +81,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'main',
     'rest_framework',
+    'rest_framework.authtoken',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',

@@ -24,6 +24,25 @@ Website portofolio pribadi menggunakan Django yang menampilkan perjalanan saya d
 - **Editor:** memiliki hak User dan dapat memperbarui data portofolio yang sudah ada melalui halaman `/edit/`. Editor tidak dapat membuat atau menghapus data.
 - **Superuser:** memiliki seluruh hak Editor serta dapat membuat, memperbarui, dan menghapus data portofolio. Superuser juga dapat mengatur akun dan role melalui Django Admin.
 
+### API Flutter (Tutorial 10)
+
+| Endpoint | Kontrak |
+| --- | --- |
+| `POST /auth/register/` | JSON: `username`, `password1`, `password2` → `201` dengan `message`. |
+| `POST /auth/login/` | JSON: `username`, `password` → `200` dengan `token`, `username`, `can_write`. |
+| `POST /auth/logout/` | Header `Authorization: Token <token>` → `204`, mencabut token tersebut. |
+| `GET /api/v1/projects/` dan `GET /api/v1/projects/<id>/` | Publik; header token opsional untuk data terkait akun seperti `is_starred`. |
+| `POST /api/v1/projects/` | Untuk superuser dengan `write_secret` (atau header `X-Project-Secret`). |
+
+`can_write` menunjukkan hak **membuat** proyek, bukan pengganti `write_secret`. Edit, hapus,
+dan star tetap memakai sesi web dan CSRF. Flutter harus mengirim token tanpa cookie sesi.
+
+- Instal ulang dependensi dari `requirements.txt`, lalu jalankan `python manage.py migrate --noinput`
+  untuk membuat tabel `authtoken`. `Dockerfile` sudah menjalankan migrasi saat startup.
+- Untuk Flutter Web, set `MOBILE_ALLOWED_ORIGINS` ke daftar origin lengkap yang dipisahkan koma
+  (skema, host, dan port jika ada; tanpa path). Default development: `http://localhost:3000`;
+  default produksi: kosong. Gunakan HTTPS di produksi dan jangan mengirim cookie lintas origin.
+- Untuk emulator Android, gunakan `http://10.0.2.2:8000` saat Django development berjalan di port 8000.
 
 ## TUGAS 1
 ### JAWABAN PERTANYAAN REFLEKTIF

@@ -1,6 +1,10 @@
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
 
+def can_create_projects(user):
+    return user.is_authenticated and user.is_superuser
+
+
 class IsPortfolioOwnerOrEditorOrReadOnly(BasePermission):
     message = "This portfolio action is not allowed for your role."
 
@@ -13,7 +17,7 @@ class IsPortfolioOwnerOrEditorOrReadOnly(BasePermission):
             return request.user.is_superuser or request.user.groups.filter(
                 name="Editor"
             ).exists()
-        return request.user.is_superuser
+        return can_create_projects(request.user)
 
 
 IsPortfolioOwnerOrReadOnly = IsPortfolioOwnerOrEditorOrReadOnly

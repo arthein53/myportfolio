@@ -1,5 +1,5 @@
 from rest_framework import status
-from rest_framework.authentication import SessionAuthentication
+from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -11,8 +11,16 @@ from main.serializers import ExperienceSerializer, ProjectSerializer
 from main.views import has_valid_write_secret
 
 
+class ProjectDetailTokenAuthentication(TokenAuthentication):
+    def authenticate(self, request):
+        # Flutter only reads detail; keep existing edit/delete clients session-only.
+        if request.method in ("GET", "HEAD"):
+            return super().authenticate(request)
+        return None
+
+
 @api_view(["GET", "HEAD", "POST"])
-@authentication_classes([SessionAuthentication])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsPortfolioOwnerOrEditorOrReadOnly])
 def project_list(request):
     if request.method in ("GET", "HEAD"):
@@ -40,7 +48,7 @@ def project_list(request):
 
 
 @api_view(["GET", "HEAD", "PUT", "PATCH", "DELETE"])
-@authentication_classes([SessionAuthentication])
+@authentication_classes([SessionAuthentication, ProjectDetailTokenAuthentication])
 @permission_classes([IsPortfolioOwnerOrEditorOrReadOnly])
 def project_detail(request, project_id):
     project = get_object_or_404(Project.objects.prefetch_related("starred_by"), pk=project_id)
